@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  /* --breakpoint-*: initial; */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 700px;
+  --breakpoint-lg: 900px;
+  --breakpoint-xl: 1224px;
+  /* --font-sans: "Betania Patmos", cursive, sans-serif; */
+}
+
+@layer base {
+  /* use to customize html elements like h1, body, p , div  */
+  body,
+  html {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* overflow-x: hidden; */
+
+    @apply relative;
+  }
+  body,
+  html {
+    overflow-x: hidden;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  /* use to customize reuseable classes (.btn, .card, .input , .navbar, .badge */
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE & Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .flex-placecenter {
+    @apply flex flex-col items-center justify-center;
+  }
+  .flex-start {
+    @apply flex items-center justify-start;
+  }
+  .flex-col-start {
+    @apply flex flex-col items-start justify-center;
+  }
+}
+.thin-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  @apply cursor-pointer bg-amber-100;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 9999px;
+}
+/* Hide scrollbar but keep functionality */
+
+@layer utilities {
+  /* one special css rule l[ike tailwind classes itself  , .nobutton{visibility:none}, small single purpose classes*/
+}
