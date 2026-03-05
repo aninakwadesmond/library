@@ -5,7 +5,6 @@ import "@fortawesome/free-brands-svg-icons";
 import "@fortawesome/free-regular-svg-icons";
 import "@fortawesome/free-solid-svg-icons";
 import {
-  faBasketShopping,
   faNavicon,
   faSearch,
   faShoppingCart,
