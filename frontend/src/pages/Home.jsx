@@ -58,9 +58,9 @@ function Home() {
           <AuthorCard books={books} />
         )}
 
-        {/* <Suspense fallback={<p>Authors are loading</p>}>
+        <Suspense fallback={<p>Authors are loading</p>}>
           <TopAuthors authors={authors} />
-        </Suspense> */}
+        </Suspense>
       </div>
 
       {sidenav && (
