@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function LoginWelcome({ children, image }) {
   return (
     <div className="max-w-250 grid-cols-2 justify-items-center rounded-md bg-sky-200/40 md:grid">
-      <div className="flex max-w-120 flex-col items-center justify-center gap-y-4 justify-self-start px-5 py-5 shadow-xl md:w-full">
+      <div className="mx-10 flex max-w-120 flex-col items-center justify-center gap-y-4 justify-self-start px-5 py-5 shadow-xl md:mx-0 md:w-full">
         {children}
       </div>
       <div className="flex-placecenter hidden max-w-100 p-2 md:block">

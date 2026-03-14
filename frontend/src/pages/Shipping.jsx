@@ -4,14 +4,14 @@ import ShippingNavigation from "../Shipping/ShippingNavigation";
 
 function Shipping() {
   return (
-    <div className="flex w-full flex-col items-start justify-center gap-3 p-4">
+    <div className="flex h-full w-full flex-col items-start justify-center gap-3 p-4">
       <CartNavigation />
 
       <div className="grid w-full lg:grid-cols-3 lg:gap-x-6">
         <div className="lg:col-span-2">
           <ShippingNavigation />
         </div>
-        <div className="max-h-0">
+        <div className="max-h-max">
           <PayCart />
         </div>
       </div>

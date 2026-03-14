@@ -1,27 +1,135 @@
-import { faStar } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBookmark,
+  faCalendar,
+  faEye,
+  faFile,
+  faStar,
+  faThumbsUp,
+  faUser,
+} from "@fortawesome/free-regular-svg-icons";
 import {
   faBasketShopping,
+  faBookOpen,
+  faDownload,
   faMinus,
   faMoneyBill,
   faPlus,
+  faShare,
+  faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Cards from "../HomeComponent/Cards";
 import Card from "../Components/Card";
+import Button from "./Button";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { api2 } from "../Axios/api";
+import { useNavigation } from "react-router-dom";
+import LoadingCard from "../Components/LoadingCard";
 
 function ImageDetails() {
   return (
     <div className="w-full px-3">
-      <div className="flex w-full flex-col items-start justify-center gap-2 px-3 py-4 md:gap-10 lg:grid lg:grid-cols-7 lg:gap-6">
+      <div className="flex w-full flex-col items-start justify-center gap-y-8 px-3 py-4 md:gap-3 lg:grid lg:grid-cols-7 lg:gap-6">
         <div className="w-full lg:col-span-4">
           <ImageGalary />
         </div>
         <div className="w-full lg:col-span-3">
-          <AboutDetails />
+          {/* <AboutDetails /> */}
+          <AboutFreeDetails />
         </div>
       </div>
       <RelatedItems />
+    </div>
+  );
+}
+
+function AboutFreeDetails() {
+  const { currentBook } = useSelector((state) => state.details);
+  const { title = "", authors, bookshelves = [], summaries = [] } = currentBook;
+  return (
+    <div className="flex-col-start w-full gap-7 divide-y divide-gray-200">
+      <div className="flex-col-start w-full gap-3 pb-4">
+        <p className="md inline-block rounded bg-blue-400 px-2 py-1 text-sm font-semibold text-blue-100 uppercase shadow-md">
+          ppt
+        </p>
+        <h2 className="line-clamp-2 text-2xl font-bold tracking-wide text-gray-600 capitalize">
+          {title ? title : "Web development fundementals"}
+        </h2>
+        <div className="grid w-full grid-cols-2 items-start justify-items-start gap-x-2 gap-y-3">
+          <About_Book
+            icon={faUser}
+            title="author"
+            name={authors[0]["name"] || "Desmond"}
+            // name={"Desmond"}
+          />
+          <About_Book
+            icon={faFile}
+            title="department"
+            name={bookshelves[2].split(":").pop()}
+          />
+          <About_Book
+            icon={faCalendar}
+            title="upload date"
+            name="Feb 20, 2026"
+          />
+          <About_Book icon={faBookOpen} title="pages" name="89" />
+        </div>
+      </div>
+      <div className="flex-col-start w-full gap-6">
+        <div className="flex-between w-full">
+          <ViewerAnalysis icon={faThumbsUp} text={512} />
+          <ViewerAnalysis icon={faEye} text="2,567 viewers" />
+          <ViewerAnalysis icon={faShareNodes} text="Share" />
+        </div>
+        <div className="flex-col-start w-full gap-2">
+          <h5 className="text-md font-bold tracking-normal text-gray-600 capitalize">
+            Summary
+          </h5>
+          <p className="line-clamp-3 text-[12px] font-semibold tracking-tight text-gray-400">
+            {summaries[0]}
+          </p>
+          <div className="flex-col-start w-full rounded-md bg-gray-200 px-4 py-2 shadow">
+            <span className="text-[12px] font-semibold tracking-tight text-gray-500 capitalize">
+              Course code: CS3434
+            </span>
+            <span className="text-[12px] font-semibold tracking-tight text-gray-500 capitalize">
+              file size: 24MB
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewerAnalysis({ icon, text }) {
+  return (
+    <div className="flex-start gap-1">
+      <FontAwesomeIcon icon={icon} className="text-md text-gray-600" />
+      <span className="text-md font-bold tracking-normal text-gray-600">
+        {text}
+      </span>
+    </div>
+  );
+}
+
+function About_Book({ icon, title, name }) {
+  return (
+    <div className="flex-start gap-2">
+      <FontAwesomeIcon
+        icon={icon}
+        className="text-sm font-bold text-gray-400"
+      />
+      <div className="flex-col-start">
+        <span className="text-[11px] font-semibold tracking-tight text-gray-300 capitalize">
+          {title}
+        </span>
+        <p className="tracking-nromal text-sm font-bold text-gray-600 capitalize">
+          {name}
+        </p>
+      </div>
     </div>
   );
 }
@@ -113,18 +221,52 @@ function AboutDetails() {
 }
 
 function RelatedItems() {
+  const { currentHeading } = useSelector((state) => state.homecards);
+
+  const related = currentHeading.split(" ").slice(0, 2).join(" ");
+
+  const [relatedBooks, setRelatedBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState();
+
+  const navigation = useNavigation();
+
+  // let isLoading = "";
+  useEffect(() => {
+    async function fetchRelatedData() {
+      try {
+        setIsLoading(false);
+        const { data } = await api2(`/books?search=${related}`);
+        console.log("this is the navigation state", navigation.state);
+
+        console.log("data from useEffect", data);
+        const { results } = data;
+        setRelatedBooks(results.slice(0, 6));
+        setIsLoading(true);
+      } catch (error) {
+        throw new Response(
+          JSON.stringify(error?.message || "Error in fetching data "),
+          { status: 404 },
+        );
+      }
+    }
+    fetchRelatedData();
+  }, [currentHeading]);
+
   return (
     <div className="mt-10 flex w-full flex-col items-start justify-center gap-4">
       <p className="items-center justify-start font-bold tracking-normal text-gray-700">
         This item can be cool with this
       </p>
-      <div className="grid w-full grid-cols-2 gap-3 justify-self-center md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+      <div className="grid w-full grid-cols-2 items-start justify-items-center gap-x-3 gap-y-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        {!isLoading
+          ? Array.from({ length: 6 }, (_, i) => i).map((el) => <LoadingCard />)
+          : relatedBooks.map((book) => (
+              <Card selling={false} cardContent={book} />
+            ))}
+        {/* {relatedBooks &&
+          
+          ))} */}
+
         {/* <Card /> */}
       </div>
     </div>
@@ -164,27 +306,47 @@ function Version({ version }) {
 
 function ImageGalary() {
   return (
-    <div className="flex w-full flex-col gap-1 md:grid md:grid-cols-6 lg:gap-2">
-      <div className="w-full md:order-2 md:col-span-5">
-        <SingleImage height="h-80 md:h-90 lg:h-100 " />
+    <div className="flex-col-start w-full gap-4">
+      <div className="flex w-full flex-col gap-1 md:grid md:grid-cols-6 lg:gap-2">
+        <div className="w-full md:order-2 md:col-span-5">
+          <SingleImage height="h-80 md:h-90 lg:h-100 " />
+        </div>
+        <div className="grid grid-cols-4 gap-2 md:order-1 md:h-80 md:grid-cols-1">
+          <SingleImage height="h-20" rounded="rounded-0" />
+          <SingleImage height="h-20" rounded="rounded-0" />
+          <SingleImage height="h-20" rounded="rounded-0" />
+          <SingleImage height="h-20" rounded="rounded-0" />
+        </div>
       </div>
-      <div className="grid grid-cols-4 gap-2 md:order-1 md:h-80 md:grid-cols-1">
-        <SingleImage height="h-20" rounded="rounded-0" />
-        <SingleImage height="h-20" rounded="rounded-0" />
-        <SingleImage height="h-20" rounded="rounded-0" />
-        <SingleImage height="h-20" rounded="rounded-0" />
+      <div className="mt-3 grid w-full grid-cols-2 items-center justify-items-start gap-x-5 md:flex md:items-center md:justify-center md:gap-7">
+        <Button
+          icon={faDownload}
+          text="download"
+          text_style="text-blue-100 text-sm"
+          bg_color="bg-blue-500"
+        />
+        <Button
+          icon={faBookmark}
+          text="bookmark"
+          text_style="text-gray-600 text-sm"
+          bg_color="bg-white"
+        />
       </div>
     </div>
   );
 }
 
 function SingleImage({ height, rounded }) {
+  const { currentBook } = useSelector((state) => state.details);
+
+  const { formats = {} } = currentBook;
   return (
     <div
       className={`flex ${height} w-full flex-col items-center justify-center ${rounded ? rounded : "rounded-md"} bg-slate-200`}
     >
       <img
-        src="/designs/book.jpg"
+        src={`${formats["image/jpeg"]}?default=false`}
+        onError={(e) => (e.target.src = "/designs/book.jpg")}
         alt="book image"
         className="h-[80%] max-w-[90%]"
       />

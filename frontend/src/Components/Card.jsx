@@ -1,19 +1,56 @@
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faBasketShopping } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBasketShopping,
+  faDownload,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StarIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { setCurrentBook } from "../store/Feautures/Details";
+import { setCurrentHeading } from "../store/Feautures/HomeCards";
 
-function Card({ id = 1 }) {
+function Card({ selling = true, cardContent = {} }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // const { currentBook } = useSelector((state) => state.details);
+
+  // console.log("current book", currentBook);
+
+  const {
+    // cover_i = "",
+    // author_name = "",
+    // cover_id = "",
+    volumeInfo = [],
+    // title = "",
+    // key = "",
+    title = "",
+    id,
+    authors = [],
+    formats = {},
+    download_count = "",
+  } = cardContent;
+
+  console.log(formats);
+
+  function handleSetCurrentBook() {
+    dispatch(setCurrentBook(cardContent));
+    dispatch(setCurrentHeading(title));
+    console.log("done setting current book");
+    navigate(`/details/${id}`);
+  }
   return (
-    <Link
-      to={`/details/${id}`}
-      className="flex w-40 flex-col items-start justify-center"
+    <div
+      onClick={handleSetCurrentBook}
+      className="flex w-40 cursor-pointer flex-col items-start justify-center"
     >
       <div className="relative flex h-40 w-full flex-col items-center justify-center rounded-md bg-gray-400/30">
-        <div className="max-h-[80%] w-[50%] rounded-md bg-slate-600">
+        <div className="max-h-[90%] w-[70%] rounded-md bg-slate-600">
           <img
-            src="/designs/cart.png"
+            // src={`https://covers.openlibrary.org/b/id/${cover_i || cover_id || key.split("/").pop()}-M.jpg`}
+            src={`${formats["image/jpeg"] || volumeInfo.imageLinks?.thumbnail}?default=false`}
+            onError={(e) => (e.target.src = "/images/image-0.jpg")}
             alt="images"
             className="h-full w-full rounded-md"
           />
@@ -25,30 +62,65 @@ function Card({ id = 1 }) {
           />
         </span>
       </div>
-      <div className="flex flex-col items-start justify-center">
+      <div className="flex w-full flex-col items-start justify-center">
         <h3 className="line-clamp-1 text-[14px] font-semibold tracking-tight text-gray-900/70 capitalize">
-          John varrvatos star usa contract
+          {/* {author_name || authors[0]["name"] || title} */}
+          {/* {authors[0]["name"]} */}
+          {title || volumeInfo.title}
         </h3>
-        <div className="flex items-center justify-start gap-2">
+        <div className="flex-between w-full gap-2">
           <StarIcon className="w-3 text-orange-400" />
-          <span className="text-semibold text gray-400 text-[12px] font-semibold text-gray-400">
-            4.5 (1332 reviews)
+          <span className="text-semibold text gray-400 text-[11px] font-semibold text-gray-400">
+            <FontAwesomeIcon
+              icon={faDownload}
+              className="text-sm font-semibold text-gray-300"
+            />
+            {download_count || volumeInfo.pageCount} downloads
           </span>
         </div>
-        <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
+        {/* {selling && } */}
+        {/* <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
           32.00 USD
-        </p>
+        </p> */}
       </div>
-      <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1">
+      {selling ? (
+        <div className="flex-col-start w-full gap-1">
+          <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
+            32.00 USD
+          </p>
+          <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1">
+            <FontAwesomeIcon
+              icon={faBasketShopping}
+              className="text-[10px] text-blue-500"
+            />
+            <span className="text-[12px] font-semibold tracking-tight text-blue-500">
+              Add to cart
+            </span>
+          </button>
+        </div>
+      ) : (
+        <PagesLike />
+      )}
+    </div>
+  );
+}
+
+function PagesLike() {
+  return (
+    <div className="flex-between w-full">
+      <div className="flex-start gap-1">
         <FontAwesomeIcon
-          icon={faBasketShopping}
-          className="text-[10px] text-blue-500"
+          icon={faThumbsUp}
+          className="text-sm font-bold text-gray-500"
         />
-        <span className="text-[12px] font-semibold tracking-tight text-blue-500">
-          Add to cart
+        <span className="text-sm font-semibold tracking-tight text-gray-500">
+          20%
         </span>
-      </button>
-    </Link>
+      </div>
+      <p className="text-sm font-semibold tracking-normal text-gray-500">
+        467 pages
+      </p>
+    </div>
   );
 }
 

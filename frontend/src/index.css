@@ -49,6 +49,12 @@
   .flex-start {
     @apply flex items-center justify-start;
   }
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
   .flex-col-start {
     @apply flex flex-col items-start justify-center;
   }
@@ -61,6 +67,18 @@
 .thin-scrollbar::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 9999px;
+}
+
+/* .thin-y-scrollbar::-webkit-scrollbar {
+  width: 100px;
+} */
+
+.thin-y-scrollbar::-webkit-scrollbar {
+  @apply bg-blue-300;
+  width: 6px;
+}
+.thin-y-scrollbar::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-linear-to-b from-blue-600 to-blue-400;
 }
 /* Hide scrollbar but keep functionality */
 

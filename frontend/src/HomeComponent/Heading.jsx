@@ -4,6 +4,8 @@ import {
   faPlusCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+import { setSortBy } from "../store/Feautures/HomeCards";
 
 function Heading() {
   return (
@@ -33,13 +35,25 @@ function Heading() {
 }
 
 function Select() {
+  const dispatch = useDispatch();
+  const { sortBy } = useSelector((state) => state.homecards);
+
+  function handleSortBy(value) {
+    dispatch(setSortBy(value));
+  }
   return (
     <select
       name="name"
       id=""
-      className="text-[9px] font-semibold tracking-normal text-gray-900 uppercase outline-0"
+      className="line-clamp-1 w-10 text-[9px] font-semibold tracking-normal text-gray-900 uppercase outline-0 focus:rounded-md focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+      value={sortBy}
+      onChange={(e) => handleSortBy(e.target.value)}
     >
       <option value="a-z">A-Z</option>
+      <option value="z-a">Z-A</option>
+      <option value="downloads">downoloads</option>
+      <option value="birth">Athours birth_year</option>
+      <option value="death">Athours death_year</option>
     </select>
   );
 }

@@ -13,6 +13,14 @@ import { faBell, faUser } from "@fortawesome/free-regular-svg-icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { openNav } from "../store/Feautures/Navigation_store";
+import {
+  setBooks,
+  setBooksLoading,
+  setQueryInput,
+  setSearch,
+} from "../store/Feautures/HomeCards";
+import { useEffect } from "react";
+import { api2 } from "../Axios/api";
 function Navigation({ name }) {
   const dispatch = useDispatch();
   const { sidenav } = useSelector((state) => state.navigation);
@@ -36,16 +44,55 @@ function Navigation({ name }) {
 }
 
 function SearchInput() {
+  const { query, search } = useSelector((state) => state.homecards);
+  const dispatch = useDispatch();
+  function handleQueryInput(e) {
+    dispatch(setQueryInput(e.target.value));
+  }
+
+  function handleSearch() {
+    console.log("navigation to start");
+    dispatch(setSearch(true));
+    console.log("new search", search);
+  }
+
+  useEffect(() => {
+    async function fetchBooksByCategory() {
+      try {
+        dispatch(setBooksLoading(true));
+        const { data } = await api2.get(`/books?search=${query}`);
+        console.log("new data from query", data.results);
+        dispatch(setBooks(data.results));
+        dispatch(setBooksLoading(false));
+        dispatch(setSearch(false));
+      } catch (error) {
+        throw new Response(
+          JSON.stringify(error?.message || "Failed to fetch books by category"),
+        );
+      }
+    }
+
+    if (!search) return;
+    fetchBooksByCategory();
+  }, [search]);
+
   return (
     <div className="relative w-62 rounded-full shadow md:w-100 md:bg-red-50">
       <input
+        value={query}
+        onChange={(e) => handleQueryInput(e)}
         className="w-full rounded-full p-2 pl-12 text-sm text-[12px] font-semibold tracking-wider text-gray-400 shadow-sm outline-none placeholder:capitalize"
         placeholder="search"
       />
-      <FontAwesomeIcon
-        icon={faSearch}
-        className="absolute top-[50%] left-[5%] -translate-y-[50%] text-[13px] text-gray-950/70"
-      />
+      <span
+        className="flex-plcecenter absolute top-[50%] left-[5%] -translate-y-[50%] cursor-pointer p-1"
+        onClick={handleSearch}
+      >
+        <FontAwesomeIcon
+          icon={faSearch}
+          className="text-[13px] text-gray-950/70"
+        />
+      </span>
     </div>
   );
 }
@@ -75,9 +122,5 @@ function NameOfBook({ name }) {
     </p>
   );
 }
-
-// function SideNavigation() {
-//   return div;
-// }
 
 export default Navigation;

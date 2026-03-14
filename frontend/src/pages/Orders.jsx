@@ -32,14 +32,14 @@ function Orders() {
                   price={20.0}
                   category="Brown/85/Gold"
                   quantity={1}
-                  image="../..footer.png"
+                  image="/images/kids_read.jpeg"
                 />
                 <SingleCard
                   name="custom T-shirt"
                   price={10.0}
                   category="Orange/flowers"
                   quantity={1}
-                  image="../..book.jpg"
+                  image="/images/image-1.jpeg"
                   s
                 />
               </OrderCard>

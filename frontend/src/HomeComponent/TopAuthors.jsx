@@ -3,10 +3,30 @@ import {
   BookOpenIcon,
   FaceSmileIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swipe from "../Swipers/Swiper";
+import { SwiperSlide } from "swiper/react";
+import { use } from "react";
+import { useDispatch } from "react-redux";
+import { setAuhtorName } from "../store/Feautures/AuthorSlide";
 // import BooksEnd from "../Components/BooksEnd";
 
-const authors = [
+const FakeAuthors = [
+  "Markus zukus",
+  "Dan Brown",
+  "John Green",
+  "Markus zukus",
+  "Dan Brown",
+  "Markus zukus",
+  "Dan Brown",
+  "John Green",
+  "Markus zukus",
+  "Dan Brown",
+  "Markus zukus",
+  "Dan Brown",
+  "John Green",
+  "Markus zukus",
+  "Dan Brown",
   "Markus zukus",
   "Dan Brown",
   "John Green",
@@ -14,7 +34,9 @@ const authors = [
   "Dan Brown",
 ];
 
-function TopAuthors() {
+function TopAuthors({ authors = [] }) {
+  const getAuthors = use(authors);
+  console.log("all authors", getAuthors);
   return (
     <div className="mt-10 flex w-full flex-col items-start justify-start gap-4">
       <div className="flex items-center justify-center gap-6">
@@ -26,11 +48,15 @@ function TopAuthors() {
         </Link>
       </div>
 
-      <div className="flex w-90 overflow-x-auto p-2 md:w-160">
-        <div className="flex w-max items-center justify-start gap-6">
-          {authors.map((name) => (
-            <Author name={name} />
-          ))}
+      <div className="flex h-40 w-full">
+        <div className="thin-scrollbar flex w-full cursor-pointer items-center justify-start gap-6">
+          <Swipe>
+            {getAuthors.map((author) => (
+              <SwiperSlide>
+                <Author author={author} />
+              </SwiperSlide>
+            ))}
+          </Swipe>
         </div>
       </div>
       <div className="mt-5 grid w-full grid-cols-3 gap-2">
@@ -62,12 +88,31 @@ function More({ count, text }) {
   );
 }
 
-function Author({ name }) {
+function Author({ author }) {
+  const { key, name } = author;
+  console.log(key, name);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //set author's name
+
+  function handleSetAuthorName() {
+    dispatch(setAuhtorName(name));
+    navigate(`/author/${name}`);
+  }
+
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-2">
+    <div
+      // to={`/author/${key}`}
+      onClick={handleSetAuthorName}
+      className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 pb-5"
+    >
       <div className="h-15 w-15 rounded-full border-[1.5px] border-green-400 p-[2px]">
         <img
-          src="/designs/book.jpg"
+          src={`https://covers.openlibrary.org/a/olid/${key}-L.jpg?default=false`}
+          onError={(e) =>
+            (e.target.src = `https://ui-avatars.com/api/?name=${name}`)
+          }
           alt="bok"
           className="h-full w-full rounded-full"
         />
