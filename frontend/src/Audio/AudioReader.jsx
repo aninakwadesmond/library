@@ -12,7 +12,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLoaderData } from "react-router-dom";
-import { useSpeechSynthesis } from "react-speech-kit";
+
 import { useSpeechReader } from "react-speech-reader";
 import { setPlay } from "../store/Feautures/AudioSlice";
 import {
@@ -29,8 +29,8 @@ function AudioReader() {
 
   const {title,authors, bookshelves, formats, id } = currentBook; 
 
-  const { speak, cancel } = useSpeechSynthesis();
-  // const positionRef = useRef(0);
+  // const { speak, cancel } = useSpeechSynthesis();
+  // // const positionRef = useRef(0);
   const { data } = useLoaderData();
 
   const { play } = useSelector((state) => state.audio);
