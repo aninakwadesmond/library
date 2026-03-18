@@ -12,10 +12,14 @@ import Chat from "../Chat_Assitant/Chat";
 import ChatApp from "../Chat_Assitant/ChatApp";
 import { api, api2 } from "../Axios/api";
 import { Await, useLoaderData } from "react-router-dom";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { setBooks } from "../store/Feautures/HomeCards";
 import AuthorCard from "../Authors/AuthorCard";
 import { topAuthors } from "../HomeComponent/TopAuthorName";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
+import { setChatHome, setChatRoom } from "../store/Feautures/ChatSlice";
 
 // import {json} from 'react-router-dom';
 
@@ -42,6 +46,26 @@ function Home() {
   // }, [category, dispatch]);
 
   console.log("category change" , category, query, "inputs")
+
+  // const [openChat, setOpenChat]= useState(false)
+  // const [openApp, setOpenApp]= useState(false)
+
+  // const dispatch = useDispatch(); 
+
+  const {chatHome, chatRoom} = useSelector(state=> state.chat)
+
+  function handleOpenChatRoom(){
+    if(chatHome==false & chatRoom==true){
+      dispatch(setChatHome(false))
+      dispatch(setChatRoom(false))
+      return
+      
+    }
+    else {
+      dispatch(setChatHome())
+    }
+  }
+
 
   return (
     <div
@@ -75,8 +99,13 @@ function Home() {
       <div className="mt-10 max-h-fit w-full min-w-0 justify-self-center rounded-sm bg-green-200/20 py-5 pl-4 lg:order-3 lg:col-span-3 lg:pr-3 xl:col-span-1 xl:mt-0">
         <BooksEnd />
       </div>
-      {/* <Chat /> */}
-      {/* <ChatApp /> */}
+      {/* <Chat/> */}
+      {chatHome &&   <Chat /> }
+     {chatRoom &&  <ChatApp /> }
+      
+      <div className="flex-placecenter w-10 h-10 bg-blue-200 shadow-md rounded-full  fixed bottom-[10%] right-[3%] p-3 cursor-pointer z-40" onClick={handleOpenChatRoom}>
+        <FontAwesomeIcon icon={faMessage}  className="text-blue-700 text-[1.5rem] animate-bounce translate-y-1"/>
+      </div>
     </div>
   );
 }

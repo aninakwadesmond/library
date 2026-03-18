@@ -33,7 +33,7 @@ function Navigation({ name }) {
     navigate('/')
   }
   return (
-    <div className="flex w-full items-center justify-between px-6">
+    <div className="flex w-full items-center justify-between ">
       <button
         className="cursor-pointer border-0 bg-none p-1 outline-0"
         onClick={handleShowNav}

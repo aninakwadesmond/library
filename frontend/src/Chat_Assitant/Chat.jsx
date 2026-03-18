@@ -9,10 +9,18 @@ import {
   faBookOpen,
   faStairs,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { setChatHome, setChatRoom } from "../store/Feautures/ChatSlice";
 
 function Chat() {
   return (
+<>
+ <div className="w-full absolute w-screen bg-blue-200/50 h-full top-0 bottom-0 left-0 right-0">
+      
+      </div>
+
     <div className="absolute top-[1%] right-[5%] z-10 h-130 w-[90%] rounded-md bg-blue-50 shadow-lg md:w-100">
+     
       <div className="relative h-full w-full">
         <div className="flex-col-start h-[40%] justify-start gap-1 rounded-md bg-linear-to-r from-blue-500 to-blue-600 px-4 py-4">
           <div className="flex-between w-full">
@@ -53,6 +61,7 @@ function Chat() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 function YourConversation() {
@@ -118,9 +127,17 @@ function Chat_image() {
 }
 
 function Start_Conversation() {
+ const dispatch =  useDispatch()
+
+ function handleOpenChat(){
+  dispatch(setChatHome()); 
+  dispatch(setChatRoom(true))
+ }
+
+
   return (
     <div className="flex-col-start absolute top-[40%] left-[50%] z-20 mx-auto w-[90%] -translate-[50%] gap-2 rounded-md bg-white p-3 shadow-lg">
-      <p className="text-sm font-semibold tracking-normal text-gray-600">
+      <p className="text-sm font-semibold tracking-normal text-gray-600" >
         Start a conversation with our team of experts now!
       </p>
       <div className="flex-start gap-2">
@@ -132,10 +149,11 @@ function Start_Conversation() {
           />
         ))}
       </div>
-      <button className="flex-placecenter w-full cursor-pointer rounded-md bg-linear-to-tr from-blue-600 to-blue-300 py-2 text-[11px] font-semibold tracking-normal text-blue-100 shadow-md">
+      <button className="flex-placecenter w-full cursor-pointer rounded-md bg-linear-to-tr from-blue-600 to-blue-300 py-2 text-[11px] font-semibold tracking-normal text-blue-100 shadow-md" onClick={handleOpenChat}>
         New conversation
       </button>
     </div>
+
   );
 }
 

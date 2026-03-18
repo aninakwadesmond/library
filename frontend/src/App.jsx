@@ -14,6 +14,7 @@ import store from "./store/store";
 import RootFooter from "./pages/RootFooter";
 import Author, { LoadAuthorBooks } from "./pages/Author";
 import AudioPage, { LoadTextData } from "./pages/AudioPage";
+import ScrollTop from "./Components/ScrollTop";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +41,8 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
-      <RouterProvider router={router} fallbackElement={<LoaderBooks/>}/>
+   
+      <RouterProvider router={router} />
     </Provider>
   );
 }

@@ -6,6 +6,7 @@ import AuthorSlideReducer from "./Feautures/AuthorSlide";
 import DetailSliceReducer from "./Feautures/Details";
 import AudioSliceReducer from "./Feautures/AudioSlice";
 import CartSliceReducer from "./Feautures/CartSlice"; 
+import ChatSliceReducer from './Feautures/ChatSlice'
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     details: DetailSliceReducer,
     audio: AudioSliceReducer,
     cart:CartSliceReducer, 
+    chat:ChatSliceReducer
   },
 });
 

@@ -5,13 +5,29 @@ import {
   faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
+import { setChatHome, setChatRoom } from "../store/Feautures/ChatSlice";
 
 function ChatApp() {
+  const dispatch = useDispatch()
+   function handleGoBackHome(){
+  dispatch(setChatRoom(false)); 
+  dispatch(setChatHome())
+ }
+
+ function handleDropChat(){
+    dispatch(setChatRoom(false)); 
+  dispatch(setChatHome())
+ }
   return (
+    <>
+     <div className="w-full absolute w-screen bg-blue-200/50 h-full top-0 bottom-0 left-0 right-0"> 
+      </div>
+   
     <div className="absolute top-[1%] right-[5%] z-10 h-130 w-[90%] rounded-md bg-mist-50 shadow-lg md:w-100">
       <div className="flex-between w-full rounded-t-md bg-linear-to-l from-blue-700 to-blue-400 px-2 py-5">
         <div className="flex-start gap-3">
-          <span className="flex-placecenter h-6 w-6 cursor-pointer">
+          <span className="flex-placecenter h-6 w-6 cursor-pointer" onClick={handleGoBackHome}>
             <FontAwesomeIcon
               icon={faArrowLeft}
               className="text-lg font-bold text-gray-950"
@@ -27,7 +43,7 @@ function ChatApp() {
             Chat Support
           </p>
         </div>
-        <span className="flex-placecenter h-7 w-7 cursor-pointer">
+        <span className="flex-placecenter h-7 w-7 cursor-pointer" onClick={handleGoBackHome}>
           <FontAwesomeIcon
             icon={faArrowDown}
             className="text-md text-gray-900"
@@ -37,6 +53,7 @@ function ChatApp() {
       <ChatContent />
       <TextArea />
     </div>
+     </>
   );
 }
 

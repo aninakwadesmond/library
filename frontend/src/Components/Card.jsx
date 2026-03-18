@@ -87,7 +87,7 @@ function Card({ selling = true, cardContent = {} }) {
       { download_count > 70000 ? (
         <div className="flex-col-start w-full gap-1">
           <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
-            {`$${Math.floor((download_count /100))||10 }.00`} USD
+            {`₵${Math.floor((download_count /100))||10 }.00`}
           </p>
           <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1">
             <FontAwesomeIcon
