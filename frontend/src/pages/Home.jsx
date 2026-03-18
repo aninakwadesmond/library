@@ -63,7 +63,7 @@ function Home() {
         {/* <Suspense fallback={<p>Authors are loading</p>}>
           <TopAuthors authors={authors} />
         </Suspense> */}
-        {/* <TopAuthors authors={topAuthors} /> */}
+        <TopAuthors authors={topAuthors} />
       </div>
 
       {sidenav && (
