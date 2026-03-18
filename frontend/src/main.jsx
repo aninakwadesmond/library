@@ -8,3 +8,7 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// remove initial loader
+const loader = document.getElementById("initial-loader");
+if (loader) loader.remove();

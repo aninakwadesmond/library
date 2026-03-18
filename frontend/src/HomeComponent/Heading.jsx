@@ -45,15 +45,16 @@ function Select() {
     <select
       name="name"
       id=""
-      className="line-clamp-1 w-10 text-[9px] font-semibold tracking-normal text-gray-900 uppercase outline-0 focus:rounded-md focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+      className="line-clamp-1 w-10 text-[9px] font-semibold tracking-normal text-gray-900 uppercase outline-0 focus:rounded-md focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 cursor-pointer [&_option]:cursor-pointer"
       value={sortBy}
       onChange={(e) => handleSortBy(e.target.value)}
     >
-      <option value="a-z">A-Z</option>
+      <option value="a-z" >A-Z</option>
       <option value="z-a">Z-A</option>
       <option value="downloads">downoloads</option>
       <option value="birth">Athours birth_year</option>
       <option value="death">Athours death_year</option>
+      <option value="paid">paid</option>
     </select>
   );
 }

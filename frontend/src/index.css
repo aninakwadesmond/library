@@ -6,7 +6,13 @@
   --breakpoint-md: 700px;
   --breakpoint-lg: 900px;
   --breakpoint-xl: 1224px;
-  /* --font-sans: "Betania Patmos", cursive, sans-serif; */
+  --color-white: #fefefe;
+  --color-black-200: #060000;
+  --color-orange: #ec5620;
+  --color-yellow: #fdc800; 
+  --font-charon:"Iosevka Charon", monospace, sans; 
+  /* --font-guy:"Luckiest Guy" , cursive */
+    /* --font-sans: "Betania Patmos", cursive, sans-serif; */;
 }
 
 @layer base {

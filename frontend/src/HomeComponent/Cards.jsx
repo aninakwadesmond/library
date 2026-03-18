@@ -31,8 +31,16 @@ function Cards({ docs = [] }) {
     }
     if (sortBy === "death") {
       sortedBooks = [...books].sort(
-        (a, b) => a.authors[0]["death_year"] - b.authors[0]["death_year"],
+        (a, b) =>{ 
+          console.log('your author death_year', a.authors[0].birth_year, b.authors[0], b.authors[0].birth_year, b.authors[0]['birth_year'])
+        return  a.authors[0]["death_year"] - b.authors[0]["death_year"]}
       );
+    }
+    if(sortBy === 'paid'){
+      sortedBooks = [...books].filter((obj, book, index)=> !book.copyright )
+
+      console.log('sortedbooks', sortedBooks)
+
     }
 
     console.log("shuffle sort", sortedBooks);

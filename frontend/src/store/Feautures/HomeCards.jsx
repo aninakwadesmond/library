@@ -5,7 +5,7 @@ const initialState = {
   category: "",
   currentHeading: "",
   booksLoading: false,
-  sortBy: "a-z",
+  sortBy: "",
   query: "",
   search: false,
 };

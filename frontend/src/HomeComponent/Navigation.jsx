@@ -10,7 +10,7 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell, faUser } from "@fortawesome/free-regular-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { openNav } from "../store/Feautures/Navigation_store";
 import {
@@ -21,15 +21,19 @@ import {
 } from "../store/Feautures/HomeCards";
 import { useEffect } from "react";
 import { api2 } from "../Axios/api";
+
 function Navigation({ name }) {
   const dispatch = useDispatch();
   const { sidenav } = useSelector((state) => state.navigation);
 
+ const navigate =  useNavigate()
+
   function handleShowNav() {
     dispatch(openNav());
+    navigate('/')
   }
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="flex w-full items-center justify-between px-6">
       <button
         className="cursor-pointer border-0 bg-none p-1 outline-0"
         onClick={handleShowNav}
@@ -98,6 +102,7 @@ function SearchInput() {
 }
 
 function Accounts() {
+  const {cartItems} = useSelector(state => state.cart)
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center justify-center gap-1">
@@ -108,7 +113,13 @@ function Accounts() {
           <FontAwesomeIcon icon={faBell} />
         </Link>
         <Link className="flex-placecenter" to={"/cart"}>
-          <FontAwesomeIcon icon={faShoppingCart} />
+        <div className="relative order-2">
+        <FontAwesomeIcon icon={faShoppingCart} className="text-orange" />
+          {cartItems.length > 0 && <span className="absolute -top-2 -right-2 flex h-5 w-5 flex-col items-center justify-center rounded-full bg-orange/60 p-1 text-center text-[12px] font-bold text-gray-50">
+            {cartItems.length}
+          </span> }
+          
+        </div>
         </Link>
       </div>
     </div>

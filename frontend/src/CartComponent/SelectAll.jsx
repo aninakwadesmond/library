@@ -1,7 +1,10 @@
+import { useSelector } from "react-redux";
+
 function SelectAll() {
+  const {cartItems} = useSelector(state => state.cart )
   return (
     <div className="flex w-full flex-col items-start justify-center gap-2">
-      <p className="font-bold tracking-tight text-gray-600">Your cart (11)</p>
+      <p className="font-bold tracking-tight text-gray-600">Your cart ({cartItems.length})</p>
       <div className="w-full rounded-full border border-slate-200 p-1 shadow">
         <div className="flex w-full items-center justify-between rounded-full bg-white px-3 py-2 shadow">
           <div className="flex items-center justify-start gap-1">

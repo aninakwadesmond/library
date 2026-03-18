@@ -29,6 +29,7 @@ function Card({ selling = true, cardContent = {} }) {
     id,
     authors = [],
     formats = {},
+    copyright="", 
     download_count = "",
   } = cardContent;
 
@@ -83,10 +84,10 @@ function Card({ selling = true, cardContent = {} }) {
           32.00 USD
         </p> */}
       </div>
-      {selling ? (
+      { download_count > 70000 ? (
         <div className="flex-col-start w-full gap-1">
           <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
-            32.00 USD
+            {`$${Math.floor((download_count /100))||10 }.00`} USD
           </p>
           <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1">
             <FontAwesomeIcon
@@ -98,14 +99,15 @@ function Card({ selling = true, cardContent = {} }) {
             </span>
           </button>
         </div>
-      ) : (
-        <PagesLike />
-      )}
+      ) : 
+        <PagesLike volumeInfo={volumeInfo} />
+      }
     </div>
   );
 }
 
-function PagesLike() {
+function PagesLike({ volumeInfo }) {
+  console.log(volumeInfo, volumeInfo.averageRating);
   return (
     <div className="flex-between w-full">
       <div className="flex-start gap-1">
@@ -114,11 +116,12 @@ function PagesLike() {
           className="text-sm font-bold text-gray-500"
         />
         <span className="text-sm font-semibold tracking-tight text-gray-500">
-          20%
+          {/* {volumeInfo.averageRating || 2} */}
+          {(volumeInfo.averageRating / 5) * 100 || 23}%
         </span>
       </div>
-      <p className="text-sm font-semibold tracking-normal text-gray-500">
-        467 pages
+      <p className="text-[13px] font-semibold tracking-normal text-gray-500">
+        {volumeInfo.pageCount || 467} pages
       </p>
     </div>
   );

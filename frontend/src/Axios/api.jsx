@@ -3,9 +3,10 @@
 import axios from "axios";
 const api2 = axios.create({
   baseURL: "https://gutendex.com",
-  // baseURL: "https://openlibrary.org",
-  // timeout: 10000,
 });
+// baseURL: "https://openlibrary.org",
+// timeout: 10000,
+// const url = `https://gutendex.com/books?search=${query}`;
 
 const api = axios.create({
   baseURL: "https://openlibrary.org",

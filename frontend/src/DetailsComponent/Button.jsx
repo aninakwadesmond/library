@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-function Button({ icon, text, bg_color, text_style }) {
+function Button({ icon, text, bg_color, text_style, play = false }) {
   const { currentBook } = useSelector((state) => state.details);
   const { formats } = currentBook;
+
   function getBookUrl(formats) {
     const downloadUrl =
       formats["application/octet-stream"] ||
@@ -13,9 +14,11 @@ function Button({ icon, text, bg_color, text_style }) {
       formats["application/x-mobipocket-ebook"];
     return downloadUrl;
   }
+
+  const AudioText = formats["text/plain; charset=utf-8"];
   return (
     <Link
-      to={getBookUrl(formats)}
+      to={!play ? getBookUrl(formats) : `/audio?textUrl=${AudioText}`}
       download={true}
       className={`w-full rounded-md border-0 bg-none shadow outline-0 ${bg_color} flex-center cursor-pointer gap-1 py-1 md:w-auto md:px-5`}
     >

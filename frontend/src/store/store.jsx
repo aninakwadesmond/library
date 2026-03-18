@@ -4,6 +4,8 @@ import HomeSliceReducer from "./Feautures/HomeCards";
 import AuthorSlideReducer from "./Feautures/AuthorSlide";
 
 import DetailSliceReducer from "./Feautures/Details";
+import AudioSliceReducer from "./Feautures/AudioSlice";
+import CartSliceReducer from "./Feautures/CartSlice"; 
 
 const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ const store = configureStore({
     homecards: HomeSliceReducer,
     author: AuthorSlideReducer,
     details: DetailSliceReducer,
+    audio: AudioSliceReducer,
+    cart:CartSliceReducer, 
   },
 });
 

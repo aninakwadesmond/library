@@ -3,7 +3,7 @@ import Navigation from "../HomeComponent/Navigation";
 
 function Details() {
   return (
-    <div>
+    <div className=" ">
       <Navigation name="LibRoom" />
       <ImageDetails />
     </div>

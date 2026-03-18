@@ -3,6 +3,7 @@ import {
   faCalendar,
   faEye,
   faFile,
+  faFileAudio,
   faStar,
   faThumbsUp,
   faUser,
@@ -13,6 +14,7 @@ import {
   faDownload,
   faMinus,
   faMoneyBill,
+  faMusic,
   faPlus,
   faShare,
   faShareNodes,
@@ -22,26 +24,44 @@ import { StarIcon } from "@heroicons/react/24/solid";
 import Cards from "../HomeComponent/Cards";
 import Card from "../Components/Card";
 import Button from "./Button";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useContext, useEffect, useState } from "react";
 import { api2 } from "../Axios/api";
 import { useNavigation } from "react-router-dom";
 import LoadingCard from "../Components/LoadingCard";
+import Details from "../pages/Details";
+import { DetailsContext } from "../Context/DetialsContext";
+import { setQuantity } from "../store/Feautures/Details";
+import { setCartItems } from "../store/Feautures/CartSlice";
 
 function ImageDetails() {
+  const {currentBook} = useSelector(state => state.details)
+  const {copyright, download_count} = currentBook; 
+
+  console.log('copyright state', currentBook, copyright)
+  const dispatch = useDispatch()
+
+  //add the entire object to the cart array; 
+  function handleAddToCart(item){
+dispatch(setCartItems(item))
+  }
+
   return (
-    <div className="w-full px-3">
+    <DetailsContext.Provider value={{copyright, handleAddToCart, download_count}}>
+    <div className="w-full px-3 ">
       <div className="flex w-full flex-col items-start justify-center gap-y-8 px-3 py-4 md:gap-3 lg:grid lg:grid-cols-7 lg:gap-6">
         <div className="w-full lg:col-span-4">
           <ImageGalary />
         </div>
         <div className="w-full lg:col-span-3">
-          {/* <AboutDetails /> */}
-          <AboutFreeDetails />
+          {download_count > 70000 ?  <AboutDetails /> :  <AboutFreeDetails />}
+          
+         
         </div>
       </div>
       <RelatedItems />
     </div>
+    </DetailsContext.Provider>
   );
 }
 
@@ -135,23 +155,46 @@ function About_Book({ icon, title, name }) {
 }
 
 function AboutDetails() {
+    const { currentBook } = useSelector((state) => state.details);
+  const { title = "", authors, bookshelves = [], summaries = [] , download_count} = currentBook;
+  const dispatch = useDispatch(); 
+  // const {cartItems} = useSelector(state => state.cart)
+  const {handleAddToCart} = useContext(DetailsContext)
+
+
+  const {quantity} = useSelector(state => state.details)
+
+
+  function handleQunatity(e){
+    dispatch(setQuantity(e.target.value))
+
+  }
+
+  function handleIncrement(){
+    dispatch(setQuantity(Number(quantity)+1))
+  }
+
+  function handleDecrement(){
+    if(Number(quantity) === 0 )return ; 
+    dispatch(setQuantity(Number(quantity)-1))
+  }
   return (
     <div className="flex w-full flex-col items-start justify-center gap-3">
       <div className="flex w-full flex-col items-start justify-center">
         <div className="flex flex-col items-start justify-center">
           <p className="text-[12px] font-semibold tracking-tight text-gray-400 capitalize">
-            Jeff Bussy
+            {authors[0]['name']}
           </p>
           <h2 className="text-[1.8rem] font-bold tracking-tight text-gray-700 capitalize">
-            Boa Fierce Jacket
+           {title}
           </h2>
         </div>
         <div className="flex items-center gap-2 bg-amber-100">
           <p className="font-semibold tracking-normal text-gray-500 line-through">
-            $129.00
+            {`${Math.floor(download_count/100)+ 12}.00`}
           </p>
           <p className="self-end text-[1.5rem] font-bold tracking-wide text-gray-900">
-            $122.00
+                     {`${Math.floor(download_count/100)}.00`}
           </p>
           <span className="rounded-md bg-gray-950 p-1 px-2 text-center text-[12px] text-gray-300 shadow">
             5% Disc
@@ -172,18 +215,8 @@ function AboutDetails() {
         <h2 className="text-[14px] font-bold tracking-tight text-gray-800 capitalize">
           Descriptions
         </h2>
-        <p className="line-clamp-4 text-[11px] font-bold text-gray-400">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
-          incidunt quas delectus provident, doloremque culpa officiis corrupti
-          sit unde adipisci omnis tempora. Reiciendis recusandae, similique
-          voluptatibus numquam porro ullam voluptate. Minima sint deserunt
-          facere. Corrupti similique inventore tempore, dolorum optio aspernatur
-          sint nesciunt, ut quibusdam architecto suscipit nemo cupiditate illo
-          doloribus, tempora voluptas recusandae et placeat aliquam. Fuga,
-          molestiae asperiores. Commodi cumque earum nisi pariatur dolores
-          repellendus iste, amet totam qui deserunt. Animi cum earum quae autem
-          soluta cupiditate repudiandae repellendus. Distinctio laborum maxime
-          fugiat provident expedita, quos sequi dignissimos?
+        <p className="line-clamp-4 text-[11px] font-bold text-gray-400 ">
+          {summaries}
         </p>
       </div>
       <div className="flex flex-col items-start justify-center gap-2">
@@ -194,27 +227,33 @@ function AboutDetails() {
           <Version version="v3" />
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-between gap-2">
-        <Increment_Decrement icon={faMinus} />
+      <div className="w-full flex-col-start items-center gap-1 bg-orange-200/85  left-0 fixed bottom-0 z-40 py-2 px-6 gap-y-6 md:relative md:rounded-lg">
+      {/* <div className="mt-3 flex items-center justify-between gap-2">
+        <Increment_Decrement icon={faMinus} action={handleDecrement}/>
         <input
           type="number"
           className="shatracking-wide w-40 appearance-none rounded-md bg-amber-50 px-4 text-center text-[16px] font-bold tracking-wide text-gray-600 outline-0"
           placeholder="0"
+          value={quantity}
           onWheel={(e) => e.target.blur()}
+          onChange={e=> handleQunatity(e) }
         />
-        <Increment_Decrement icon={faPlus} />
-      </div>
+        <Increment_Decrement icon={faPlus} action={handleIncrement} />
+      </div> */}
       <div className="flex w-full items-center justify-between gap-4">
         <Button_Cart
           icon={faBasketShopping}
           name="Add to cart"
           color="bg-amber-100"
+          handleAddToCart={handleAddToCart}
+          item ={currentBook}
         />
         <Button_Cart
           icon={faMoneyBill}
           name="checkout"
           color="bg-amber-500/30"
         />
+      </div>
       </div>
     </div>
   );
@@ -273,10 +312,14 @@ function RelatedItems() {
   );
 }
 
-function Button_Cart({ name, icon, color }) {
+function Button_Cart({ name, icon, color, handleAddToCart, item={}}) {
+  console.log(item, "current Item")
+  console.log(handleAddToCart,"handler")
   return (
     <button
       className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-1 shadow ${color}`}
+    onClick={()=> handleAddToCart(item)}
+    // onClick={()=> console.log(item)}
     >
       <FontAwesomeIcon icon={icon} className="text-orange-300" />
       <span className="text-[16px] font-semibold text-gray-600">{name}</span>
@@ -284,9 +327,9 @@ function Button_Cart({ name, icon, color }) {
   );
 }
 
-function Increment_Decrement({ icon }) {
+function Increment_Decrement({ icon , action}) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-md bg-orange-300 p-2 shadow">
+    <div className="flex flex-col items-center justify-center rounded-md bg-orange-300 p-2 shadow cursor-pointer" onClick={action}>
       <FontAwesomeIcon
         icon={icon}
         className="text-[16px] font-bold text-gray-50"
@@ -305,6 +348,7 @@ function Version({ version }) {
 }
 
 function ImageGalary() {
+ const {copyright, download_count} =  useContext(DetailsContext); 
   return (
     <div className="flex-col-start w-full gap-4">
       <div className="flex w-full flex-col gap-1 md:grid md:grid-cols-6 lg:gap-2">
@@ -318,7 +362,8 @@ function ImageGalary() {
           <SingleImage height="h-20" rounded="rounded-0" />
         </div>
       </div>
-      <div className="mt-3 grid w-full grid-cols-2 items-center justify-items-start gap-x-5 md:flex md:items-center md:justify-center md:gap-7">
+      {download_count <= 70000 && <div className="mt-3 grid w-full grid-cols-2 items-center justify-items-start gap-x-5 md:flex md:items-center md:justify-center md:gap-7">
+        
         <Button
           icon={faDownload}
           text="download"
@@ -326,12 +371,14 @@ function ImageGalary() {
           bg_color="bg-blue-500"
         />
         <Button
-          icon={faBookmark}
-          text="bookmark"
+          icon={faMusic}
+          text="Listen"
           text_style="text-gray-600 text-sm"
           bg_color="bg-white"
+          play={true}
         />
-      </div>
+      </div>}
+      
     </div>
   );
 }

@@ -15,15 +15,15 @@ import { Await, useLoaderData } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import { setBooks } from "../store/Feautures/HomeCards";
 import AuthorCard from "../Authors/AuthorCard";
+import { topAuthors } from "../HomeComponent/TopAuthorName";
 
 // import {json} from 'react-router-dom';
 
 function Home() {
   const { sidenav } = useSelector((state) => state.navigation);
-  const { category, books, query } = useSelector((state) => state.homecards);
+  const { category, books, query , sortBy} = useSelector((state) => state.homecards);
   const { getbooks, authors } = useLoaderData();
 
-  console.log("all books", getbooks, "all authors", authors);
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -41,6 +41,8 @@ function Home() {
   //   fetchbyCategory();
   // }, [category, dispatch]);
 
+  console.log("category change" , category, query, "inputs")
+
   return (
     <div
       div
@@ -50,17 +52,18 @@ function Home() {
         <Navigation />
         <Heading />
         <BookTitles />
-        {!category && !query ? (
-          <Suspense fallback={<p>Books loading </p>}>
+        {!category && !query && !sortBy ? (
+          <Suspense fallback={<LoaderBook/>}>
             <Cards docs={getbooks} />
           </Suspense>
         ) : (
           <AuthorCard books={books} />
         )}
 
-        <Suspense fallback={<p>Authors are loading</p>}>
+        {/* <Suspense fallback={<p>Authors are loading</p>}>
           <TopAuthors authors={authors} />
-        </Suspense>
+        </Suspense> */}
+        {/* <TopAuthors authors={topAuthors} /> */}
       </div>
 
       {sidenav && (
@@ -99,27 +102,27 @@ export async function LoaderBook() {
   }
 }
 
-export async function GetTopAuthors() {
-  try {
-    const { data } = await api.get("/search/authors.json", {
-      params: { q: "b", limit: 200 },
-    });
-    const topAuthors = data.docs
-      .sort((a, b) => b.work_count - a.work_count)
-      .slice(0, 10);
-    return topAuthors;
-  } catch (error) {
-    throw new Response(
-      JSON.stringify(error?.message || "Error fetching authors"),
-      { status: 400 },
-    );
-  }
-}
+// export async function GetTopAuthors() {
+//   try {
+//     const { data } = await api.get("/search/authors.json", {
+//       params: { q: "b", limit: 200 },
+//     });
+//     const topAuthors = data.docs
+//       .sort((a, b) => b.work_count - a.work_count)
+//       .slice(0, 10);
+//     return topAuthors;
+//   } catch (error) {
+//     throw new Response(
+//       JSON.stringify(error?.message || "Error fetching authors"),
+//       { status: 400 },
+//     );
+//   }
+// }
 
 export async function LoaderBooks() {
   return {
     getbooks: LoaderBook(),
-    authors: GetTopAuthors(),
+    // authors: GetTopAuthors(),
   };
 }
 

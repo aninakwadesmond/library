@@ -35,8 +35,8 @@ const FakeAuthors = [
 ];
 
 function TopAuthors({ authors = [] }) {
-  const getAuthors = use(authors);
-  console.log("all authors", getAuthors);
+  // const authors = use(authors);
+  console.log("all authors", authors);
   return (
     <div className="mt-10 flex w-full flex-col items-start justify-start gap-4">
       <div className="flex items-center justify-center gap-6">
@@ -51,9 +51,9 @@ function TopAuthors({ authors = [] }) {
       <div className="flex h-40 w-full">
         <div className="thin-scrollbar flex w-full cursor-pointer items-center justify-start gap-6">
           <Swipe>
-            {getAuthors.map((author) => (
+            {authors.map((authorName) => (
               <SwiperSlide>
-                <Author author={author} />
+                <Author authorName={authorName} />
               </SwiperSlide>
             ))}
           </Swipe>
@@ -88,39 +88,40 @@ function More({ count, text }) {
   );
 }
 
-function Author({ author }) {
-  const { key, name } = author;
-  console.log(key, name);
+function Author({ authorName }) {
+  // console.log(key, name);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //set author's name
 
   function handleSetAuthorName() {
-    dispatch(setAuhtorName(name));
-    navigate(`/author/${name}`);
+    dispatch(setAuhtorName(authorName));
+    // navigate(`/author/${name}`);
   }
 
   return (
-    <div
+    <Link
+      to={`/author/${authorName}`}
       // to={`/author/${key}`}
       onClick={handleSetAuthorName}
       className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 pb-5"
     >
       <div className="h-15 w-15 rounded-full border-[1.5px] border-green-400 p-[2px]">
         <img
-          src={`https://covers.openlibrary.org/a/olid/${key}-L.jpg?default=false`}
+          // src={`https://covers.openlibrary.org/a/olid/${key}-L.jpg?default=false`}
+          src={`https://robohash.org/${authorName}.png`}
           onError={(e) =>
-            (e.target.src = `https://ui-avatars.com/api/?name=${name}`)
+            (e.target.src = `https://ui-avatars.com/api/?name=${authorName}`)
           }
           alt="bok"
           className="h-full w-full rounded-full"
         />
       </div>
       <p className="line-clamp-1 text-[10px] font-bold tracking-tight text-gray-400 capitalize">
-        {name}
+        {authorName}
       </p>
-    </div>
+    </Link>
   );
 }
 

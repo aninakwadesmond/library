@@ -2,6 +2,7 @@ import {
   faBasketShopping,
   faCarRear,
   faCheck,
+  faNavicon,
   faTimes,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
@@ -17,13 +18,36 @@ import { faGooglePay } from "@fortawesome/free-brands-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import Last_Visit from "../Components/Last_Visit";
 import Dashboard_sideNav from "../usersDashboard/Dashboard_sideNav";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { DashboardContext } from "../Context/DashbordContext";
 
 function UserDashBoard() {
+    const [openModal, setOpenModal] = useState(false); 
+
+  function handleOpenModal(){
+    setOpenModal(true)
+  }
+
+  function handleCloseModal(){
+    setOpenModal(false)
+  }
   return (
+    // <Dashboa></Dashboa>
+    <DashboardContext.Provider value={{openModal, setOpenModal, handleOpenModal, handleCloseModal}}>
+
+  
     <div className="grid w-full justify-items-center px-2 py-4 lg:grid-cols-9 lg:gap-x-2">
-      <div className="justify-self-center lg:col-span-2">
+    
+      <div className="justify-self-center lg:col-span-2  lg:block hidden" >
         <Dashboard_sideNav />
+
       </div>
+      <div className="justify-self-center lg:col-span-2  lg:block " style={{display:openModal ?'block':'none'}}>
+        <Dashboard_sideNav />
+
+      </div>
+    
       <div className="w-full lg:col-span-7">
         <div className="flex w-full flex-col items-start justify-center gap-5">
           <UserNavigation />
@@ -301,6 +325,7 @@ function UserDashBoard() {
         </div>
       </div>
     </div>
+      </DashboardContext.Provider>
   );
 }
 

@@ -2,44 +2,49 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { useSelector } from "react-redux";
 
 function CartItems() {
+  const {cartItems} = useSelector(state => state.cart)
   return (
     <div className="mt-4 w-full rounded-md border border-gray-200 p-2 shadow-lg shadow-gray-900/20">
       <div className="flex w-full flex-col items-start justify-center gap-y-10 divide-y-2 divide-amber-100 rounded-md bg-white p-2 shadow">
+        {cartItems.map(cart=> <SingleCart cart={cart}/>)}
+        {/* <SingleCart />
         <SingleCart />
-        <SingleCart />
-        <SingleCart />
+        <SingleCart /> */}
       </div>
     </div>
   );
 }
 
-function SingleCart() {
+function SingleCart({cart}) {
+  const {title, download_count, formats,languages, bookshelves } = cart
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-3 pb-5 md:flex-nowrap md:gap-0">
       <div className="flex items-center justify-start gap-3">
         <div className="bg-silver-300 flex h-27 w-35 flex-col items-center justify-center rounded-md bg-gray-400/30">
           <img
-            src="/designs/book.jpg"
+            src={`${formats['image/jpeg']}?default=false`}
+            onError={e=> e.target.src= "/designs/book.jpg"}
             alt="book Image"
             className="max-h-[90%] max-w-[80%]"
           />
         </div>
-        <div className="flex h-25 flex-col items-start justify-between">
+        <div className="flex h-25 flex-col items-start justify-between ">
           <div className="flex flex-col items-start justify-center">
-            <p className="line-clamp-1 max-w-full text-[13px] font-bold tracking-wide text-gray-600 capitalize">
-              The hope from the sky
+            <p className="line-clamp-1 max-w-full text-[13px] font-bold tracking-wide text-gray-600 capitalize ">
+              {title}
             </p>
             <span className="text-[11px] font-semibold text-gray-300">
-              version: 2
+              languages: {languages.map(lan=> lan)}
             </span>
             <span className="text-[12px] font-semibold text-gray-300">
-              genre: motivation
+              category: {bookshelves[0].split(':').pop()}
             </span>
           </div>
           <div className="mt-auto max-w-full text-[14px] font-bold tracking-wide text-gray-900/80 capitalize">
-            $145.00
+            ₵ {((download_count/1000)*2).toFixed(2)}
           </div>
         </div>
       </div>

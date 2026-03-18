@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { currentBook: {} };
+const initialState = { currentBook: {}, quantity:0 };
 
 const DetailSlice = createSlice({
   name: "details",
@@ -9,8 +9,13 @@ const DetailSlice = createSlice({
     setCurrentBook: (state, action) => {
       state.currentBook = action.payload;
     },
+    setQuantity:(state , action)=> {
+      state.quantity = action.payload
+    }
+   
   },
+
 });
 
-export const { setCurrentBook } = DetailSlice.actions;
+export const { setCurrentBook, setQuantity } = DetailSlice.actions;
 export default DetailSlice.reducer;

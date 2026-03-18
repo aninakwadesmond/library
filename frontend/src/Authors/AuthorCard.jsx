@@ -19,31 +19,92 @@ function AuthorCard({ books }) {
       console.log("hello start effetc");
       let sortedBooks = [];
       if (sortBy === "a-z") {
-        sortedBooks = [...books].sort((a, b) => a.title.localeCompare(b.title));
+        sortedBooks = [...books].sort((a, b) =>
+          (a.title || a.volumeInfo.title).localeCompare(
+            b.title || b.volumeInfo.title,
+          ),
+        );
       }
-      if (sortBy === "z-a") {
+      else if (sortBy === "z-a") {
         sortedBooks = [...books].sort((a, b) => b.title.localeCompare(a.title));
         console.log("z-a output", books, sortedBooks);
       }
-      if (sortBy === "downloads") {
+      else if (sortBy === "downloads") {
         sortedBooks = [...books].sort(
-          (a, b) => a.download_count - b.dowmload_count,
+          (a, b) => a.download_count - b.download_count,
         );
       }
-      if (sortBy === "birth") {
-        sortedBooks = [...books].sort(
-          (a, b) => a.authors[0]["birth_year"] - b.authors[0]["birth_year"],
-        );
+      else if (sortBy === "birth") {
+
+        const bookswithBirthYear = [...books].filter((book, index)=> book.authors && book.authors.length > 0 && book.authors.birth_year !==null); 
+
+        const booksWithoutBirthYear = [...books].filter((book, index)=> !book.authors || !book.authors.length > 0 || !book.authors.birth_year)
+
+        const sortBooksWithBirthYear = [...bookswithBirthYear].sort((a, b)=> a.authors[0].birth_year - b.authors[0].birth_year)
+
+        sortedBooks = [...sortBooksWithBirthYear, ...booksWithoutBirthYear]; 
+
+         console.log('all sorted books', sortedBooks)
+
+        // dispatch(setBooks(sortedBooks))
+        
+
       }
-      if (sortBy === "death") {
-        sortedBooks = [...books].sort(
-          (a, b) => a.authors[0]["death_year"] - b.authors[0]["death_year"],
-        );
+      else if (sortBy === "death") {
+ 
+
+        //filter books with authors; 
+        console.log('inital books', books); 
+        const booksWithAuthors = [...books].filter((book, index)=> book.authors && book.authors.length > 0 && book.authors.death_year !== null)
+
+        console.log('bookswithAuthor', booksWithAuthors)
+
+        //filter out books without  authors; 
+        const booksWithoutAuthors = [...books].filter((book, index)=> !book.authors || !book.authors.length>0 && !book.authors.death_year )
+
+        //only sort books with authors; 
+         console.log('bookswithoutAuthor', booksWithoutAuthors)
+
+        const sortedbooksWithAuthors = [...booksWithAuthors].sort((a,b)=> a.authors[0].death_year - b.authors[0].death_year); 
+
+         console.log('sortedbooksWithAuthors', sortedbooksWithAuthors)
+
+        //combine sortedbooksWithAuthors and bookswithoutAuthors
+
+         sortedBooks = [...sortedbooksWithAuthors, ...booksWithoutAuthors]; 
+        console.log('all sorted books', sortedBooks)
+
+        //updating the books container
+        // dispatch(setBooks(sortedBooks))
+
+
       }
 
-      console.log("reframe books", books, sortedBooks);
-      console.log("shuffle sort", sortedBooks);
-      dispatch(setBooks(sortedBooks));
+      else if(sortBy === "paid"){sortedBooks = [...books].filter((book, index, array)=> {
+
+        //finding paid items 
+        console.log("initial books", books); 
+        const booksWithPaid = [...books].filter((book, index)=> book.download_count  && book.download_count > 70000 );
+        
+        console.log('paid books',booksWithPaid); 
+
+        const freeBooks = [...books].filter((book,index )=> book.download_count <= 70000)
+
+         console.log('freebooks',freeBooks); 
+
+        sortedBooks = [...booksWithPaid, ...freeBooks].filter((book, index, array)=>index === array.findIndex(o=> o.id === book.id) )
+        
+        console.log('sorted books', sortedBooks); 
+              dispatch(setBooks(sortedBooks))
+
+        
+      })}
+      if (sortBy === 'paid') return
+      dispatch(setBooks(sortedBooks))
+
+      // console.log("reframe books", books, sortedBooks);
+      // console.log("shuffle sort", sortedBooks);
+      // dispatch(setBooks(sortedBooks));
     }
     SortedBooks();
   }, [sortBy, search]);

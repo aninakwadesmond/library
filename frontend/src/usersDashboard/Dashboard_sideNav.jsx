@@ -18,13 +18,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
+import { useContext } from "react";
+import { DashboardContext } from "../Context/DashbordContext";
 
 function Dashboard_sideNav() {
+  const {handleCloseModal} = useContext(DashboardContext)
   return (
     <div className="">
       <div className="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-gray-300/40 md:hidden"></div>
       <div className="absolute top-0 left-0 flex min-h-screen flex-col items-start justify-center gap-y-6 rounded-md bg-white px-3 py-4 shadow-lg lg:relative">
-        <div className="group absolute top-2 left-53 z-10 flex h-7 w-7 cursor-pointer flex-col items-center justify-center rounded-full bg-red-400 shadow-md duration-300 hover:bg-red-100 lg:hidden">
+        <div className="group absolute top-2 left-53 z-10 flex h-7 w-7 cursor-pointer flex-col items-center justify-center rounded-full bg-red-400 shadow-md duration-300 hover:bg-red-100 lg:hidden" onClick={handleCloseModal}>
           <FontAwesomeIcon
             icon={faTimes}
             className="font-bold text-red-50 transition duration-300 group-hover:text-red-300"

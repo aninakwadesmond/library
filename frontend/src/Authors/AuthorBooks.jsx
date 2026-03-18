@@ -27,20 +27,21 @@ function AuthorBooks() {
 }
 
 function CardsContainer() {
-  const BookswithCoverImages = useLoaderData();
+  const { results } = useLoaderData();
   const dispatch = useDispatch();
-  console.log("response data", BookswithCoverImages);
+  console.log("response data from api call", results);
 
-  //BookswithCoverImages run ones on mount and will never change , to make eslint happy by removing the yellow lines , I have to use them as depencies but not neccessary
+  //results run ones on mount and will never change , to make eslint happy by removing the yellow lines , I have to use them as depencies but not neccessary
 
   useEffect(() => {
-    dispatch(setAuthorBooks(BookswithCoverImages));
-  }, [dispatch, BookswithCoverImages]);
+    dispatch(setAuthorBooks(results));
+  }, [dispatch, results]);
 
   const { books } = useSelector((state) => state.author);
+  console.log("books cover image", results, books);
   return (
     <div className="mt-6 w-full">
-      <AuthorCard books={BookswithCoverImages} />
+      <AuthorCard books={results} />
     </div>
   );
 }
@@ -127,6 +128,7 @@ function Button({ color, icon, children, text_color }) {
 }
 
 function Navigation() {
+  const { authorName } = useSelector((state) => state.author);
   return (
     <div className="flex-between w-full">
       <div className="flex-col-start">
@@ -158,14 +160,15 @@ function Navigation() {
         <div className="flex-start gap-2">
           <div className="flex-placecenter h-8 w-8 rounded-full">
             <img
-              src="/images/image-0.jpg"
+              // src="/images/image-0.jpg"
+              src={`https://robohash.org/${authorName}.png`}
               alt="image of author"
               className="h-full w-full rounded-full"
             />
           </div>
-          <div className="flex-col-start">
-            <p className="text-md font-bold tracking-tighter text-gray-600 capitalize">
-              Noah Tanka
+          <div className="flex-col-start md:max-w-auto max-w-15">
+            <p className="line-clamp-1 text-sm font-bold tracking-tighter text-gray-600 capitalize">
+              {authorName}
             </p>
             <p className="text-[10px] tracking-tighter text-gray-400 capitalize">
               Admin
