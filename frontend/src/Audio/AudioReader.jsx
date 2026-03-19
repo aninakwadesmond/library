@@ -25,9 +25,9 @@ function AudioReader() {
   // const { speak, cancel, setPitch, setVoice, setRate, pause, resume } =
   //   useSpeechReader();
 
-  const {currentBook} = useSelector(state => state.details)
+  const { currentBook } = useSelector((state) => state.details);
 
-  const {title,authors, bookshelves, formats, id } = currentBook; 
+  const { title, authors, bookshelves, formats, id } = currentBook;
 
   // const { speak, cancel } = useSpeechSynthesis();
   // // const positionRef = useRef(0);
@@ -49,7 +49,12 @@ function AudioReader() {
   // Update ref whenever position changes
   useEffect(() => {
     positionRef.current = position;
+    // dispatch(setPlay(""));
   }, [position]);
+
+  useEffect(() => {
+    dispatch(setPlay(""));
+  }, []);
 
   //forward or backward skip;
   const words = useRef(data.split(/\s+/));
@@ -64,6 +69,9 @@ function AudioReader() {
   //Play /Pause / Resume
 
   function playBegin() {
+    if (synth.speaking) {
+      synth.cancel();
+    }
     utterrance.current = new SpeechSynthesisUtterance(data);
     utterrance.current.rate = rate;
     utterrance.current.onboundary = (e) => {
@@ -73,7 +81,19 @@ function AudioReader() {
         positionRef.current = newPosition;
       }
     };
-    synth.speak(utterrance.current);
+
+    utterrance.current.onerror = (event) => {
+      console.error("Speech error:", event.error);
+      setIsplaying(false);
+
+      dispatch(setPlay("")); // Reset to play state
+    };
+
+    // Add small delay for iOS Safari
+    setTimeout(() => {
+      synth.speak(utterrance.current);
+    }, 100);
+
     setIsplaying(true);
   }
 
@@ -93,8 +113,8 @@ function AudioReader() {
     if (play === "") {
       console.log("your data", data);
       dispatch(setPlay("start"));
-      // speak({ text: data });
       playBegin();
+      // speak({ text: data });
     }
     if (play === "start") {
       dispatch(setPlay("pause"));
@@ -116,17 +136,18 @@ function AudioReader() {
 
     //Approx: 3 words per second
     const wordsToSkip = Math.floor(seconds * 3);
-    const currentWordIndex = data.slice(0, positionRef.current).split(/\s+/).length - 1;
+    const currentWordIndex =
+      data.slice(0, positionRef.current).split(/\s+/).length - 1;
     const newIndex = Math.max(
       0,
       Math.min(currentWordIndex + wordsToSkip, words.current.length - 1),
     );
 
     //ca;culate new Character posistion
-    const newPosition = words.current.slice(0, newIndex).join(" ").length; 
+    const newPosition = words.current.slice(0, newIndex).join(" ").length;
 
     //Update position ref immediately
-    positionRef.current = newPosition; 
+    positionRef.current = newPosition;
 
     //getting remaining text
     const remainingText = words.current.slice(newIndex).join(" ");
@@ -135,28 +156,24 @@ function AudioReader() {
     //create new utterance with proper handlers
     utterrance.current = new SpeechSynthesisUtterance(remainingText);
     utterrance.current.rate = rate;
-    
-
 
     //Reattach boundary evenet to track new Posistion
-    utterrance.current.onboundary= e => {
-      if(e.name === 'word'){
-  
-        const globalPosition = newPosition +e.charIndex; 
-        positionRef.current = globalPosition; 
-        setPosition(globalPosition); 
+    utterrance.current.onboundary = (e) => {
+      if (e.name === "word") {
+        const globalPosition = newPosition + e.charIndex;
+        positionRef.current = globalPosition;
+        setPosition(globalPosition);
       }
-        //calculate global posistion
-    }
+      //calculate global posistion
+    };
 
-    // Add onend handler; 
+    // Add onend handler;
     // utterrance.current.onend = e=> {
 
     // }
 
     synth.speak(utterrance.current);
   }
-
 
   const [count, setProgres] = useState(0);
   const [currentTIme, setCurrentTime] = useState(0);
@@ -197,19 +214,19 @@ function AudioReader() {
   }, [getCurrentTime, getProgress]);
 
   return (
-    <div className="flex-placecenter h-[90%] w-full justify-start gap-y-1 px-6 py-4 ">
+    <div className="flex-placecenter h-[90%] w-full justify-between justify-start gap-y-1 px-6 py-4">
       <div className="flex-between w-full">
-        <FaIcon icon={faArrowLeft} path={`/details/${id}`}/>
+        <FaIcon icon={faArrowLeft} path={`/details/${id}`} />
         <p className="text-center text-[1.3rem] font-bold tracking-normal text-white capitalize">
           playing now
         </p>
         <FaIcon icon={faCommentDots} />
       </div>
-      <div className="flex-placecenter md:w-[25-rem mt-4 h-[18rem] w-[20rem] rounded-[2rem]  md:h-[23rem] bg-linear-to-r from-gray-700">
+      <div className="flex-placecenter md:w-[25-rem mt-4 h-[18rem] w-[20rem] rounded-[2rem] bg-linear-to-r from-gray-700 md:h-[23rem]">
         <div className="flex-placecenter h-[95%] w-[95%]">
           <img
-            src={`${formats['image/jpeg']}?default=false`}
-            onError={e=> e.target.src = `/images/image-0.jpg`}
+            src={`${formats["image/jpeg"]}?default=false`}
+            onError={(e) => (e.target.src = `/images/image-0.jpg`)}
             alt="reading bok image "
             className="h-full w-full rounded-[2rem] object-center"
           />
@@ -217,13 +234,13 @@ function AudioReader() {
       </div>
       <div className="gap-y3 flex w-full flex-col items-center justify-center gap-y-1">
         <span className="text-center text-[1rem] font-bold tracking-tight text-white/70">
-         {`Author: ${authors[0]['name']}`}
+          {`Author: ${authors[0]["name"]}`}
         </span>
-        <p className="max-w-[22rem] text-center text-[1.4rem]  font-bold tracking-tight text-white font-charon">
+        <p className="max-w-[22rem] text-center font-charon text-[1.4rem] font-bold tracking-tight text-white">
           {title}
         </p>
         <span className="text-center text-sm text-[1rem] font-bold tracking-tight text-white/70">
-          {`Category: ${bookshelves[0].split(':')[1]}`}
+          {`Category: ${bookshelves[0].split(":")[1]}`}
         </span>
       </div>
       <CurrentReadTimer
@@ -236,7 +253,7 @@ function AudioReader() {
         <Controls icon={faRotateBack} /> */}
         <Controls icon={faRotateBack} action={skip} skipCount={-20} />
         <Controls
-          icon={play === "" ? faPlay : play === "start" ? faPause : faYoutube}
+          icon={play === "" ? faPlay : faPause}
           active={true}
           action={handleSetPlay}
         />
@@ -329,9 +346,12 @@ function Controls({ icon, active = false, action, skipCount = "" }) {
   );
 }
 
-function FaIcon({ icon , path=""}) {
+function FaIcon({ icon, path = "" }) {
   return (
-    <Link to={path && path} className="flex-placecenter h-8 w-8 cursor-pointer rounded-full transition-all duration-400 hover:bg-orange">
+    <Link
+      to={path && path}
+      className="flex-placecenter h-8 w-8 cursor-pointer rounded-full transition-all duration-400 hover:bg-orange"
+    >
       <FontAwesomeIcon
         icon={icon}
         className="text-md font-semibold text-white"

@@ -4,10 +4,10 @@ import { api2 } from "../Axios/api";
 
 function AudioPage() {
   return (
-    <div className="flex-placecenter max-h-screen w-screen bg-black-200 overflow-hidden">
-    <div className="h-full w-[25rem] bg-black-200 md:w-screen  md:max-w-[70rem] ">
-      <AudioReader />
-    </div>
+    <div className="flex-placecenter h-screen w-screen overflow-hidden bg-black-200">
+      <div className="h-full w-[25rem] bg-black-200 md:w-screen md:max-w-[70rem]">
+        <AudioReader />
+      </div>
     </div>
     // </div>
   );
