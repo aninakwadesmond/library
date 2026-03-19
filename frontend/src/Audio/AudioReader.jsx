@@ -69,9 +69,9 @@ function AudioReader() {
   //Play /Pause / Resume
 
   function playBegin() {
-    if (synth.speaking) {
-      synth.cancel();
-    }
+    // if (synth.speaking) {
+    //   synth.cancel();
+    // }
     utterrance.current = new SpeechSynthesisUtterance(data);
     utterrance.current.rate = rate;
     utterrance.current.onboundary = (e) => {
@@ -116,13 +116,13 @@ function AudioReader() {
       playBegin();
       // speak({ text: data });
     }
-    if (play === "start") {
+    if (play === "start" || play === "resume") {
       dispatch(setPlay("pause"));
       // pause();
       pause();
     }
     if (play === "pause") {
-      dispatch(setPlay(""));
+      dispatch(setPlay("resume"));
       console.log("your data3", data);
       // resume();
       resume();
@@ -253,7 +253,13 @@ function AudioReader() {
         <Controls icon={faRotateBack} /> */}
         <Controls icon={faRotateBack} action={skip} skipCount={-20} />
         <Controls
-          icon={play === "" ? faPlay : faPause}
+          icon={
+            play === ""
+              ? faPlay
+              : play === "start" || play === "resume"
+                ? faPause
+                : faPlay
+          }
           active={true}
           action={handleSetPlay}
         />
