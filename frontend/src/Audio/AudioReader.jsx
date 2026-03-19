@@ -72,6 +72,9 @@ function AudioReader() {
     // if (synth.speaking) {
     //   synth.cancel();
     // }
+    if (play === "") {
+      skip(-10);
+    }
     utterrance.current = new SpeechSynthesisUtterance(data);
     utterrance.current.rate = rate;
     utterrance.current.onboundary = (e) => {
@@ -236,7 +239,7 @@ function AudioReader() {
         <span className="text-center text-[1rem] font-bold tracking-tight text-white/70">
           {`Author: ${authors[0]["name"]}`}
         </span>
-        <p className="max-w-[22rem] text-center font-charon text-[1.4rem] font-bold tracking-tight text-white">
+        <p className="line-clamp-3 max-w-[22rem] text-center font-charon text-[1.4rem] font-bold tracking-tight text-white">
           {title}
         </p>
         <span className="text-center text-sm text-[1rem] font-bold tracking-tight text-white/70">
