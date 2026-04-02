@@ -46,7 +46,7 @@ function SingleCart({ cart }) {
             src={`${formats["image/jpeg"]}?default=false`}
             onError={(e) => (e.target.src = "/designs/book.jpg")}
             alt="book Image"
-            className="max-h-[90%] max-w-[80%]"
+            className="h-[90%] w-[80%]"
           />
         </div>
         <div className="flex h-25 flex-col items-start justify-between">
