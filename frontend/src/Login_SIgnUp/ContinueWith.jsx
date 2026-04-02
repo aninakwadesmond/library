@@ -8,7 +8,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // import FacebookLogin from "@greatsumini/react-facebook-login";
 // import {} from "react ";
 
-import { LoginSocialFacebook } from "reactjs-social-login";
+// import { LoginSocialFacebook } from "reactjs-social-login";
 import auth from "../Components/firebase";
 
 function ContinueWith() {
@@ -34,14 +34,14 @@ function ContinueWith() {
           text="google"
           action={handleGoogleAuthLogin}
         />
-        <LoginSocialFacebook
+        {/* <LoginSocialFacebook
           appId="2192959411513345"
           onResolve={(resolve) => console.log(resolve)}
           onReject={(error) => console.log(error)}
         >
-          {/* <SocialMedia icon={faFacebook} text="facebook" /> */}
+       
           facebook
-        </LoginSocialFacebook>
+        </LoginSocialFacebook> */}
       </div>
     </div>
   );
