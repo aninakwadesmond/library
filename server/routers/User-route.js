@@ -75,7 +75,7 @@ UserRoute.post('/register', async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000 * 7, //max 1 day
       path: '/',
       // domain: 'localhost',
@@ -154,7 +154,7 @@ UserRoute.post('/login', async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: isProd,
-    sameSite: 'lax',
+    sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000 * 7, //max 1 day
     path: '/',
     // domain: 'localhost',
@@ -173,7 +173,7 @@ UserRoute.post('/logout', [authLogin], async (req, res, next) => {
   const options = {
     httpOnly: true,
     secure: isProd,
-    sameSite: 'lax',
+    sameSite: 'none',
     maxAge: 0,
   };
   res.cookie('jwt', '', options);

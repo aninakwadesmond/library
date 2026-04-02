@@ -13,15 +13,32 @@ const { verifyRoute } = require('./routers/veriffyLogins');
 app.use(express.json());
 // app.use(cors());
 
-// CORS configuration - MUST be before routes
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://library-mangement-1.onrender.com',
+];
+
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Your frontend URL
-    credentials: true, // ALLOW CREDENTIALS (cookies)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
   }),
 );
+// CORS configuration - MUST be before routes
+// app.use(
+//   cors({
+//     origin: 'http://localhost:5173', // Your frontend URL
+//     credentials: true, // ALLOW CREDENTIALS (cookies)
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+//   }),
+// );
 //allow the send of cookies fronm the frontend
 app.use(cookieParser());
 
