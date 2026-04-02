@@ -2,17 +2,28 @@ import { useEffect } from "react";
 import Card from "../Components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingCard from "../Components/LoadingCard";
-import { setBooks } from "../store/Feautures/HomeCards";
+import { setBooks, setBooksLoading } from "../store/Feautures/HomeCards";
 
 function AuthorCard({ books }) {
   console.log("ready books", books);
-  const { booksLoading, sortBy, search } = useSelector(
+  const { booksLoading, sortBy, search, query } = useSelector(
     (state) => state.homecards,
   );
-  console.log(";on we go", sortBy, booksLoading);
+
   const dispatch = useDispatch();
-  // const { items } = books;
-  // console.log(items);
+  // const { items } = books; 
+  // // console.log(items);
+ 
+
+
+  //simulate loading , I may change it before deployment 
+  useEffect(()=>{
+    setTimeout(()=> {
+      dispatch(setBooksLoading(false))
+    }, 3000)
+  })
+
+
 
   useEffect(() => {
     function SortedBooks() {
@@ -84,7 +95,7 @@ function AuthorCard({ books }) {
 
         //finding paid items 
         console.log("initial books", books); 
-        const booksWithPaid = [...books].filter((book, index)=> book.download_count  && book.download_count > 70000 );
+        const booksWithPaid = [...books].filter((book, index)=> book.download_count  && book.download_count > 10000 );
         
         console.log('paid books',booksWithPaid); 
 
@@ -95,16 +106,17 @@ function AuthorCard({ books }) {
         sortedBooks = [...booksWithPaid, ...freeBooks].filter((book, index, array)=>index === array.findIndex(o=> o.id === book.id) )
         
         console.log('sorted books', sortedBooks); 
-              dispatch(setBooks(sortedBooks))
+           return   dispatch(setBooks(sortedBooks))
 
         
       })}
-      if (sortBy === 'paid') return
-      dispatch(setBooks(sortedBooks))
+      // if (sortBy === 'paid') return
+      // dispatch(setBooks(sortedBooks))
 
       // console.log("reframe books", books, sortedBooks);
-      // console.log("shuffle sort", sortedBooks);
-      // dispatch(setBooks(sortedBooks));
+      if(sortBy === 'paid') return; 
+      console.log("shuffle sort", sortedBooks);
+      dispatch(setBooks(sortedBooks));
     }
     SortedBooks();
   }, [sortBy, search]);
@@ -113,7 +125,7 @@ function AuthorCard({ books }) {
 
   return (
     <div className="mt-10 grid w-full grid-cols-2 items-start justify-items-center gap-4 space-y-5 md:grid-cols-3 lg:grid-cols-4 lg:space-y-0">
-      {booksLoading
+      {booksLoading 
         ? Array.from({ length: 10 }, (_, i) => i).map((key) => (
             <LoadingCard key={key} />
           ))

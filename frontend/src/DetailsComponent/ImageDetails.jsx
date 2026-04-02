@@ -26,12 +26,12 @@ import Card from "../Components/Card";
 import Button from "./Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
-import { api2 } from "../Axios/api";
+import { api2, server } from "../Axios/api";
 import { useNavigation } from "react-router-dom";
 import LoadingCard from "../Components/LoadingCard";
 import Details from "../pages/Details";
 import { DetailsContext } from "../Context/DetialsContext";
-import { setQuantity } from "../store/Feautures/Details";
+import { setQuantity, setRelatedBooks } from "../store/Feautures/Details";
 import { setCartItems } from "../store/Feautures/CartSlice";
 
 function ImageDetails() {
@@ -43,7 +43,7 @@ function ImageDetails() {
 
   //add the entire object to the cart array; 
   function handleAddToCart(item){
-dispatch(setCartItems(item))
+dispatch(setCartItems({...item, quantity:1, amountByQuantity:(((item.download_count /1000)*2)||10 ).toFixed(2) *1}))
   }
 
   return (
@@ -81,13 +81,13 @@ function AboutFreeDetails() {
           <About_Book
             icon={faUser}
             title="author"
-            name={authors[0]["name"] || "Desmond"}
+            name={authors["name"] || "Desmond"}
             // name={"Desmond"}
           />
           <About_Book
             icon={faFile}
             title="department"
-            name={bookshelves[2].split(":").pop()}
+            name={bookshelves[0].split(":").pop()}
           />
           <About_Book
             icon={faCalendar}
@@ -264,22 +264,29 @@ function RelatedItems() {
 
   const related = currentHeading.split(" ").slice(0, 2).join(" ");
 
-  const [relatedBooks, setRelatedBooks] = useState([]);
+  // const [relatedBooks, setRelatedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState();
 
   const navigation = useNavigation();
+
+  const dispatch = useDispatch()
+  const {relatedBooks} = useSelector(state => state.details)
 
   // let isLoading = "";
   useEffect(() => {
     async function fetchRelatedData() {
       try {
         setIsLoading(false);
-        const { data } = await api2(`/books?search=${related}`);
+        if(relatedBooks.length > 0){
+          setIsLoading(true); return
+        }
+        const { data } = await server.get(`/books/related?related=${related}`)
         console.log("this is the navigation state", navigation.state);
 
         console.log("data from useEffect", data);
-        const { results } = data;
-        setRelatedBooks(results.slice(0, 6));
+        // const  data } = data;
+        // setRelatedBooks(data.slice(0, 6));
+        dispatch(setRelatedBooks(data.slice(0, 6)))
         setIsLoading(true);
       } catch (error) {
         throw new Response(

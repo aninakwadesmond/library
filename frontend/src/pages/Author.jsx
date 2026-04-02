@@ -1,16 +1,25 @@
 import axios from "axios";
 import AuthorBooks from "../Authors/AuthorBooks";
-import { api, api2, apiAuthor } from "../Axios/api";
-import { useLoaderData } from "react-router-dom";
+import { api, api2, apiAuthor, server } from "../Axios/api";
+import { useActionData, useLoaderData } from "react-router-dom";
+import { Suspense } from "react";
+import LoadingCard from "../Components/LoadingCard";
 
 function Author() {
   console.log("hello author mounted");
-  const { results } = useLoaderData();
-  console.log("mounted results", results);
+  const { authorBooks } = useLoaderData();
+  // const response = useActionData(); 
+  console.log("mounted results", authorBooks);
   return (
+    <Suspense fallback={<div className="w-screen max-h-[1/2] grid grid-cols-2 items-center justify-items-center gap-4 mt-5">
+      {Array.from({length: 6}, (_, i)=> <LoadingCard/>)}
+    </div>}>
+
+
     <div className="w-full">
-      <AuthorBooks />
+      <AuthorBooks  authorBooks={ authorBooks}/>
     </div>
+    </Suspense>
   );
 }
 
@@ -42,17 +51,36 @@ function Author() {
 //   }
 // }
 
-export async function LoadAuthorBooks({ params }) {
+ async function LoadAuthorBook({ params }) {
+  console.log('request started ')
   const { name } = params;
   console.log("name", name);
   try {
     console.log("hello");
-    const { data } = await axios.get(
-      `https://gutendex.com/books?search=${name}`,
-    );
-    console.log("hello responseeee", data);
+    const response = await server.get(`/books/search?search=${name}`)
+    console.log("hello from loader", response , response.data);
     // const BookswithCoverImages = data.results;
-    return data;
+    return response; 
+  } catch (error) {
+    throw new Response(JSON.stringify(error.message));
+  }
+}
+
+export async function LoadAuthorBooks(args){
+  return {
+    authorBooks : LoadAuthorBook(args)
+  }
+}
+
+export async  function NavigatePages({request, params}){
+  try {
+    const data = await request.formData(); 
+    const {page} = Object.fromEntries(data.entries())
+  // console.log('your data', yourData); 
+    const response = await server.get(`/books/search?page=${page}`)
+    console.log("hello from response", response , response.data, 'pages = ', page);
+    // // const BookswithCoverImages = data.results;
+    return response; 
   } catch (error) {
     throw new Response(JSON.stringify(error.message));
   }

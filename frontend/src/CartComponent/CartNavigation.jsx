@@ -1,4 +1,5 @@
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   BookOpenIcon,
@@ -7,12 +8,16 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-function CartNavigation() {
+function CartNavigation({path='/cart'}) {
  const {cartItems}= useSelector(state => state.cart)
   return (
     <div className="item-center flex w-full justify-between">
       <div className="flex items-center justify-start gap-1">
+        <Link to={path}>
+        <FontAwesomeIcon icon={faArrowLeft}  className="text-[2rem] font-bold text-gray-900 cursor-pointer "/>
+        </Link>
         <BookOpenIcon className="w-8 text-green-400" />
         <span className="text-[1.5rem] font-bold tracking-wide text-green-400">
           ook
@@ -27,9 +32,9 @@ function CartNavigation() {
           </span> }
           
         </div>
-        <div className="order-1">
+        <Link className="order-1" to='/signup'>
           <UserCircleIcon className="w-6 text-green-400" />
-        </div>
+        </Link>
       </div>
     </div>
   );

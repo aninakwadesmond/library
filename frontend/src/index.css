@@ -10,6 +10,11 @@
   --color-black-200: #060000;
   --color-orange: #ec5620;
   --color-yellow: #fdc800; 
+  --color-primary:#3852B4; 
+  --color-secondary:#5E7AC4; 
+  --color-tertiary:#F5F5F5; 
+  --color-tertiary2:#F2F2F2; 
+  --color-bg:#F5F5F5; 
   --font-charon:"Iosevka Charon", monospace, sans; 
   /* --font-guy:"Luckiest Guy" , cursive */
     /* --font-sans: "Betania Patmos", cursive, sans-serif; */;
@@ -17,6 +22,10 @@
 
 @layer base {
   /* use to customize html elements like h1, body, p , div  */
+  body{
+    @apply bg-bg
+    /* bg-linear-to-r from-tertiary to-tertiary2 */
+  }
   body,
   html {
     padding: 0;

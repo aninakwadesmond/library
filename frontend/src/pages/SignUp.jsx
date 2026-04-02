@@ -12,7 +12,9 @@ import Button_Action from "../Login_SIgnUp/Button_Action";
 import Header from "../Login_SIgnUp/Header";
 import ContinueWith from "../Login_SIgnUp/ContinueWith";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
+import { server } from "../Axios/api";
+import { toast } from "react-toastify";
 
 function SignUp() {
   return (
@@ -23,17 +25,26 @@ function SignUp() {
         <Header image="/images/kids_read.jpeg">
           <Title />
 
-          <MainInputs>
-            <Input icon={faEnvelope} placeholder="Email" type="email" />
-            <Input icon={faKey} placeholder="password" type="password" />
+          <MainInputs path="/signup">
+            <Input
+              icon={faEnvelope}
+              placeholder="Email"
+              type="email"
+              name="email"
+            />
+            <Input
+              icon={faKey}
+              placeholder="password"
+              type="password"
+              name="password"
+            />
             <ForgetPassword />
-          </MainInputs>
-          <MainInputs>
             <Button_Action
               action="Log in"
               b_style="bg-blue-600/80 text-green-100"
             />
           </MainInputs>
+
           <ContinueWith />
         </Header>
       </LoginWelcome>
@@ -63,6 +74,24 @@ function Title() {
       </span>
     </h3>
   );
+}
+
+//recieve and send the action to the server;
+
+export async function actionSignUpUser({ request, params }) {
+  try {
+    const response = await request.formData();
+    const userFields = Object.fromEntries(response.entries());
+
+    console.log("user fields", userFields);
+    const { data } = await server.post("/user/login", userFields);
+    toast.success(data.message || "successfully logged in");
+    console.log(data);
+    return redirect("/");
+  } catch (error) {
+    toast.error(error?.message || "Username or password incorrect");
+    throw new Response(JSON.stringify(error?.message), { status: 404 });
+  }
 }
 
 export default SignUp;

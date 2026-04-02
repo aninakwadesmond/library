@@ -14,7 +14,7 @@ function CartPage() {
   
   return (
     <div className="px-4 py-2">
-      <CartNavigation />
+      <CartNavigation path='/' />
       {cartItems.length > 0 ? <>
        <BarNavigation />
       <Proceeding /> 

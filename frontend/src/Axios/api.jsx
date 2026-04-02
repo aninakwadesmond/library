@@ -16,4 +16,16 @@ const apiAuthor = axios.create({
   baseURL: "https://www.googleapis.com/books/v1/volumes",
 });
 
-export { api, api2, apiAuthor };
+const server = axios.create({
+  baseURL: "http://localhost:5000",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// const server = axios.create({
+//   baseURL:""
+// })
+
+export { api, api2, apiAuthor, server };

@@ -1,4 +1,5 @@
 import {
+  faArrowLeft,
   faBell,
   faChevronDown,
   faFunnelDollar,
@@ -10,38 +11,51 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import Card from "../Components/Card";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoaderData } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useActionData, useLoaderData } from "react-router-dom";
+import { use, useEffect } from "react";
 import { setAuthorBooks } from "../store/Feautures/AuthorSlide";
 import Cards from "../HomeComponent/Cards";
 import Pagination from "../Components/Pagination";
 import AuthorCard from "./AuthorCard";
+// import auth from "../Components/firebase";
 
-function AuthorBooks() {
+function AuthorBooks({authorBooks}) {
   return (
     <div className="flex-col-start min-h-screen w-full justify-start gap-3 bg-linear-to-tl from-mist-100 to-mist-50 px-3 py-4">
       <Navigation />
-      <BodyContent />
+      <BodyContent authorBooks={authorBooks} />
     </div>
   );
 }
 
-function CardsContainer() {
+function CardsContainer({authorBooks= []}) {
+
+  console.log('authorbooks', authorBooks)
   const { results } = useLoaderData();
   const dispatch = useDispatch();
-  console.log("response data from api call", results);
+
+  const response = useActionData()
+  // const booksData = datas; 
+  console.log('data from action', response); 
+
+ const {data} =  use(authorBooks)
+  console.log("response data from api call", data);
 
   //results run ones on mount and will never change , to make eslint happy by removing the yellow lines , I have to use them as depencies but not neccessary
 
   useEffect(() => {
-    dispatch(setAuthorBooks(results));
-  }, [dispatch, results]);
+    if(response){
+      dispatch(setAuthorBooks(response.data ));
+    }
+  dispatch(setAuthorBooks(data ));
+
+  }, [dispatch,   data, response]);
 
   const { books } = useSelector((state) => state.author);
   console.log("books cover image", results, books);
   return (
     <div className="mt-6 w-full">
-      <AuthorCard books={results} />
+      <AuthorCard books={books || data?.data || data} />
     </div>
   );
 }
@@ -77,13 +91,17 @@ function TopNav() {
   );
 }
 
-function BodyContent() {
+function BodyContent({authorBooks}) {
+  const {data} =  use(authorBooks)
+
+  console.log('data for pagination', data)
   return (
     <div className="w-full rounded-md bg-white px-2 py-3 shadow-md">
       <BodyTop />
       <TopNav />
-      <CardsContainer />
-      <Pagination />
+      <CardsContainer authorBooks={authorBooks}/>
+      {data.length > 9 && <Pagination />}
+      
     </div>
   );
 }
@@ -132,9 +150,9 @@ function Navigation() {
   return (
     <div className="flex-between w-full">
       <div className="flex-col-start">
-        <h3 className="font-bold tracking-tight text-gray-600 capitalize">
-          Book
-        </h3>
+        <Link to = {'/'}  className="font-bold tracking-tight text-gray-600 capitalize" relative='path' >
+          <FontAwesomeIcon icon={faArrowLeft} className="font-semibold text-gray-600 text-[1.3rem]"/>
+        </Link>
         <p className="flex-start gap 2">
           <span className="text-sm font-semibold tracking-tight text-orange-500">
             Customer

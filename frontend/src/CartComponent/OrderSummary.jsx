@@ -7,8 +7,16 @@ import "@fortawesome/free-regular-svg-icons";
 import "@fortawesome/free-solid-svg-icons";
 import { faPaypal } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function OrderSummary() {
+  const {cartItems} = useSelector(state => state.cart); 
+  const totalReducedCost = cartItems.reduce((acc, cart)=> acc + cart.amountByQuantity, 0 ); 
+  const discount = totalReducedCost * (cartItems.length > 10 ? 0.1 : 0.05)
+  const deliveryFee = 12; 
+
+
+
   return (
     <div className="mt-10 rounded-md border border-gray-300/50 p-2 shadow-lg shadow-gray-900/20 lg:mt-10">
       <div className="flex flex-col items-start justify-center rounded-md bg-white px-3 py-4 shadow">
@@ -30,16 +38,16 @@ function OrderSummary() {
         </div>
         <div className="flex w-full flex-col items-start justify-center gap-4 divide-y divide-gray-400/50">
           <div className="mt-4 flex w-full flex-col gap-2 pb-4">
-            <CostCart title="subtotal" price={565} />
+            <CostCart title="subtotal" price={totalReducedCost.toFixed(2)} />
             <CostCart
-              title="discount (-20%)"
-              price={113}
+              title="discount "
+              price={discount.toFixed(2)}
               color="text-red-600"
             />
-            <CostCart title="delivery fee" price={15} />
+            <CostCart title="delivery fee" price={deliveryFee} />
           </div>
           <div className="flex w-full flex-col items-start justify-center gap-5">
-            <CostCart title="Total" price={467} total={true} />
+            <CostCart title="Total" price={(totalReducedCost - discount + deliveryFee).toFixed(2)} total={true} />
             <ButtonCheckOut />
           </div>
         </div>
@@ -76,7 +84,7 @@ function CostCart({ title, price, color, total }) {
       <p
         className={`font-bold tracking-tight ${color ? color : "text-gray-600"} text-[16px] ${total ? "text-[2rem] font-bold" : ""}`}
       >
-        ${price}
+        ₵ {price}
       </p>
     </div>
   );

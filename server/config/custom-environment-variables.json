@@ -1,0 +1,9 @@
+{
+  "db": "DB_URL",
+  "openaiKey": "OPEN_API_KEY",
+  "jwtKey": "JWT_KEY",
+  "auth": {
+    "email_user": "USER_APP_EMAIL",
+    "email_password": "USER_APP_PASSWORD"
+  }
+}

@@ -110,9 +110,9 @@ function Author({ authorName }) {
       <div className="h-15 w-15 rounded-full border-[1.5px] border-green-400 p-[2px]">
         <img
           // src={`https://covers.openlibrary.org/a/olid/${key}-L.jpg?default=false`}
-          src={`https://robohash.org/${authorName}.png`}
+          src={`${`https://robohash.org/${authorName}.png`}?default=false`}
           onError={(e) =>
-            (e.target.src = `https://ui-avatars.com/api/?name=${authorName}`)
+            (e.target.src = `./images/image-0.jpg`)
           }
           alt="bok"
           className="h-full w-full rounded-full"

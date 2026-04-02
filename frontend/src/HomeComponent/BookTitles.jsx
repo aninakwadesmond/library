@@ -14,7 +14,7 @@ import {
   setSearch,
 } from "../store/Feautures/HomeCards";
 import { useEffect, useState } from "react";
-import { api, api2 } from "../Axios/api";
+import { api, api2, server } from "../Axios/api";
 
 const categories = [
   "fiction",
@@ -86,10 +86,11 @@ function BookTitles() {
     async function fetchBooksByCategory() {
       try {
         dispatch(setBooksLoading(true));
-        const { data } = await api2.get(`/books?topic=${category}`);
-        console.log("new data from query", data.results);
-        dispatch(setBooks(data.results));
-        dispatch(setBooksLoading(false));
+      dispatch(setBooks([]));
+        const { data } = await server(`/books/search?search=${category}`);
+        console.log("new data from query", data);
+        dispatch(setBooks(data));
+        // dispatch(setBooksLoading(false));
       } catch (error) {
         throw new Response(
           JSON.stringify(error?.message || "Failed to fetch books by category"),

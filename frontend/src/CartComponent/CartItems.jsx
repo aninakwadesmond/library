@@ -2,7 +2,10 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuantity } from "../store/Feautures/Details";
+import { removeCartItem, updateCartQuantity } from "../store/Feautures/CartSlice";
 
 function CartItems() {
   const {cartItems} = useSelector(state => state.cart)
@@ -19,6 +22,16 @@ function CartItems() {
 }
 
 function SingleCart({cart}) {
+
+  const dispatch = useDispatch(); 
+
+
+  function handleRemoveItem(){
+    console.log('before removed', cart)
+    dispatch(removeCartItem(cart)); 
+    console.log('removed', cart)
+  }
+
   const {title, download_count, formats,languages, bookshelves } = cart
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-3 pb-5 md:flex-nowrap md:gap-0">
@@ -37,7 +50,7 @@ function SingleCart({cart}) {
               {title}
             </p>
             <span className="text-[11px] font-semibold text-gray-300">
-              languages: {languages.map(lan=> lan)}
+              languages: 'en , fr'
             </span>
             <span className="text-[12px] font-semibold text-gray-300">
               category: {bookshelves[0].split(':').pop()}
@@ -49,34 +62,80 @@ function SingleCart({cart}) {
         </div>
       </div>
       <div className="flex h-full w-full items-center justify-between md:h-25 md:w-auto md:flex-col md:items-end">
-        <TrashIcon className="w-5 cursor-pointer text-red-400 shadow" />
+        <TrashIcon className="w-5 cursor-pointer text-red-400 shadow" onClick={handleRemoveItem}/>
         <FontAwesomeIcon
           icon={faHeart}
           className="cursor-pointer text-orange-300 shadow"
         />
-        <InputQuantity />
+        <InputQuantity cart={cart}/>
       </div>
     </div>
   );
 }
 
-function InputQuantity() {
+function InputQuantity({cart}) {
+  const [quantity, setQuantity ] = useState(1); 
+  const dispatch = useDispatch()
+
+  console.log('allquantity', quantity); 
+
+  function handleIncrement(){
+  setQuantity(prev =>{
+    const newQty = prev + 1 ; 
+    dispatch(updateCartQuantity({id:cart.id, quantity:newQty,amountByQuantity:(((cart.download_count /1000)*2)||10).toFixed(2)*newQty }))
+    return newQty; 
+  })
+  
+  // cart.quantity = quantity; 
+  }
+
+  function handleDecrement(){
+    if(quantity=== 1) return ; 
+
+    //inside the updaet get current value and sipatch 
+    setQuantity(prev => {
+      const newQty = prev - 1 ; 
+      dispatch(updateCartQuantity({id:cart.id , quantity:newQty ,amountByQuantity:(((cart.download_count /1000)*2)||10).toFixed(2) *newQty})) 
+      return newQty; 
+    } ); 
+
+
+  }
+
+  function handleOnChange(e){
+    if (!e.target.value > 0 ) return ; 
+    setQuantity(e=> {
+      const newQty = e.target.value; 
+      dispatch(updateCartQuantity({id:cart.id , quantity:newQty,amountByQuantity:(((cart.download_count /1000)*2)||10).toFixed(2) *Number(newQty) }))
+
+      return Number(newQty)
+    }); 
+        
+  }
+
+  //doing it the wrong way by updating the objext itself
+  // function handleIncrement(){
+
+  // }
   return (
     <div className="flex items-center justify-start gap-1">
-      <Increment_Decrement icon={faMinus} />
+      <Increment_Decrement icon={faMinus} action={handleDecrement}/>
       <input
         type="number"
-        defaultValue={1}
+        // defaultValue={quantity}
+        value={quantity}
         className="w-15 rounded-md px-3 py-px font-bold text-gray-400 shadow outline-0"
+        onChange={e=> handleOnChange(e)}
+        
       />
-      <Increment_Decrement icon={faPlus} />
+      <Increment_Decrement icon={faPlus} action={handleIncrement}/>
     </div>
   );
 }
 
-function Increment_Decrement({ icon }) {
+function Increment_Decrement({ icon, action }) {
   return (
-    <button className="flex w-6 cursor-pointer flex-col items-center justify-center rounded-md bg-orange-500 p-1 shadow">
+    <button className="flex w-6 cursor-pointer flex-col items-center justify-center rounded-md bg-orange-500 p-1 shadow" onClick={action}>
       <FontAwesomeIcon icon={icon} className="font-bold text-orange-50" />
     </button>
   );

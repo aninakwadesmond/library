@@ -3,9 +3,9 @@ import SingleCard from "./SingleCard";
 
 function OrderCard({ title, status, children, status_style, bottom }) {
   return (
-    <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-md border border-gray-200 bg-white pt-2 shadow-md">
+    <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-md border border-gray-200 bg-white pt-2 shadow-md ">
       <TopNav title={title} status={status} status_style={status_style} />
-      <div className="flex w-full flex-col items-start justify-center gap-2 divide-y divide-gray-200 px-4">
+      <div className="flex w-full flex-col items-start justify-center gap-2 divide-y divide-gray-200 px-4 max-h-90 overflow-auto thin-y-scrollbar pt-40">
         {children}
       </div>
       <Action_Bottom bottom={bottom} />

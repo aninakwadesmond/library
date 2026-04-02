@@ -4,11 +4,11 @@ import ScrollTop from "../Components/ScrollTop";
 
 function RootFooter() {
   return (
-    <>
+    <div className="w-full h-full">
        <ScrollTop/>
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
 

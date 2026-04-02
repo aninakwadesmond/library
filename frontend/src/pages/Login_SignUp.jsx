@@ -7,8 +7,21 @@ import GoBack from "../Login_SIgnUp/GoBack";
 import MainContent from "../Login_SIgnUp/MainContent";
 import Button_Action from "../Login_SIgnUp/Button_Action";
 import Terms_Conditions from "../Login_SIgnUp/Terms_Conditions";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { setChatHome } from "../store/Feautures/ChatSlice";
+import { useDispatch } from "react-redux";
 
 function Login_SignUp() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  function handleNavigate(path){
+    navigate(path)
+  }
+
+  useEffect(()=> {
+    dispatch(setChatHome(false))
+  }, [])
   return (
     <div className="flex-placecenter h-screen w-full">
       <LoginWelcome image="/images/image-0.jpg">
@@ -39,11 +52,13 @@ function Login_SignUp() {
             action="Get Started"
             b_style="bg-green-600/80 text-green-100"
             path="/login"
+            handler ={handleNavigate}
           />
           <Button_Action
             action="I already have an account"
             b_style="bg-gray-600/40 text-gray-500"
             path="/signup"
+                  handler ={handleNavigate}
           />
           <Terms_Conditions />
         </MainContent>

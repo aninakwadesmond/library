@@ -2,14 +2,20 @@ import { faGooglePay } from "@fortawesome/free-brands-svg-icons";
 
 import { faCheck, faTicket, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { use } from "react";
 
-function Tickets({ heading, children, icon, head, bottom, order }) {
+function Tickets({ heading, children, icon, head, bottom, order}) {
+  // const {orderedItems} = use(data); 
+  // console.log('orderedItems array ', orderedItems); 
   return (
+    <div className={`w-full h-100 ${order ? "-order-1" : ""} overflow-auto mb-10 flex-col-start  shadow-md shadow-gray-600/20 thin-y-scrollbar`}>
+
+
     <div
-      className={`mb-10 flex w-full flex-col items-start justify-center gap-y-4 rounded-md bg-white px-3 py-4 shadow-md shadow-gray-600/20 ${order ? "-order-1" : ""}`}
+      className={`flex w-full flex-col items-start justify-center gap-y-4 rounded-md bg-white px-3 py-4    thin-y-scrollbar`}
     >
       <Ticket_Header icon={icon} title={head} />
-      <Table_Container heading={heading}>{children}</Table_Container>
+      <Table_Container heading={heading} >{children}</Table_Container >
       <div className="mt-4 flex w-full items-center justify-end gap-2">
         {bottom.map((name_action) => (
           <p className="text-[10px] font-bold tracking-tight text-green-400">
@@ -18,10 +24,11 @@ function Tickets({ heading, children, icon, head, bottom, order }) {
         ))}
       </div>
     </div>
+        </div>
   );
 }
 
-function Table_Container({ heading, children }) {
+function Table_Container({ heading, children,  }) {
   return (
     <div className="w-full overflow-hidden">
       <div className="thin-scrollbar overflow-auto pb-2">

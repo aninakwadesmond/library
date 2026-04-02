@@ -4,6 +4,8 @@ import {
   faLegal,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
+import { useFetcher, useSubmit } from "react-router-dom";
 
 function Pagination() {
   return (
@@ -18,21 +20,26 @@ function Paginate() {
   return (
     <div className="flex-start gap-2">
       <Button icon={faChevronLeft} />
-      {Array.from({ length: 5 }, (_, i) => i).map((num, index) => (
+      {Array.from({ length: 3 }, (_, i) => i+1).map((num, index) => (
         <Button num={num} key={index} />
       ))}
-      {/* <Button num={5} bg_active={true} /> */}
-      {/* <Button num={1} /> */}
+
       <Button icon={faChevronRight} />
     </div>
   );
 }
 
 function Button({ bg_active, icon, num }) {
+ const {authorName}  = useSelector(state=> state.author
+  )
+const fetcher = useFetcher(); 
+ function handleTriggerAction(){
+  fetcher.submit({page:num}, {method:'post', action:`/author/${authorName}`})
+ }
   return (
     <button
       className={`flex-placecenter h-7 w-7 rounded-md p-1 shadow ${bg_active ? "bg-orange-500 text-orange-100" : "bg-gray-300 text-gray-900"}`}
-    >
+    onClick={handleTriggerAction}>
       {icon ? (
         <FontAwesomeIcon icon={icon} className="text-sm text-gray-400" />
       ) : (

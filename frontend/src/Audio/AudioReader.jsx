@@ -19,9 +19,13 @@ import {
   faDribbbleSquare,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
-function AudioReader() {
+function AudioReader({data:audioBook}) {
+
+  console.log('books', audioBook)
+  const data = use(audioBook)
+  console.log('resolved Promise', data)
   // const { speak, cancel, setPitch, setVoice, setRate, pause, resume } =
   //   useSpeechReader();
 
@@ -31,7 +35,7 @@ function AudioReader() {
 
   // const { speak, cancel } = useSpeechSynthesis();
   // // const positionRef = useRef(0);
-  const { data } = useLoaderData();
+  // const { data } = useLoaderData();
 
   const { play } = useSelector((state) => state.audio);
   const dispatch = useDispatch();
@@ -57,7 +61,7 @@ function AudioReader() {
   }, []);
 
   //forward or backward skip;
-  const words = useRef(data.split(/\s+/));
+  const words = useRef(data || data.split(/\s+/));
 
   function handlePlayPauseResume() {
     const icon = play === "" ? faPlay : play === "start" ? faPause : faYoutube;
@@ -237,7 +241,7 @@ function AudioReader() {
       </div>
       <div className="gap-y3 flex w-full flex-col items-center justify-center gap-y-1">
         <span className="text-center text-[1rem] font-bold tracking-tight text-white/70">
-          {`Author: ${authors[0]["name"]}`}
+          {`Author: ${authors["name"]}`}
         </span>
         <p className="line-clamp-3 max-w-[22rem] text-center font-charon text-[1.4rem] font-bold tracking-tight text-white">
           {title}

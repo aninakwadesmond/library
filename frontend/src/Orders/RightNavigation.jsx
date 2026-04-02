@@ -2,7 +2,8 @@ import { faMap, faMessage, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function RightNavigation() {
+function RightNavigation({data=[]}) {
+  const {description='', email='', fullName='', orderedItems='', shippingAddress='', _id:id=''} = data
   return (
     <div className="mb-5 grid w-full grid-cols-2 gap-4 md:grid-cols-1">
       <div className="flex w-full flex-col items-start justify-center gap-2">
@@ -11,8 +12,8 @@ function RightNavigation() {
         </Notes>
 
         <Notes header="customers">
-          <Icon_text icon={faUser} text="Jane Doe" />
-          <Icon_text icon={faEnvelope} text="No order" />
+          <Icon_text icon={faUser} text={fullName} />
+          <Icon_text icon={faEnvelope} text={email} />
           <RawText text="Customer is tax-exempt" t_style="text-gray-900" />
         </Notes>
 
@@ -23,19 +24,19 @@ function RightNavigation() {
       </div>
       <div className="w-full">
         <Notes header="contact information">
-          <Icon_text icon={faMessage} text="jdoe.mobbin@gmail.com" />
+          <Icon_text icon={faMessage} text={email} />
           <RawText text="No order" t_style="text-gray-900" />
-          <RawText text="No phone number" />
+          <RawText text={shippingAddress.phoneNumber} />
           <div className="mt-3 flex w-full flex-col items-start justify-center">
             <RawText text="Shipping Address" t_style="text-gray-900" />
-            <Icon_text icon={faUser} text="Jane Doe" />
-            <RawText text="1226 University Drive" />
-            <RawText text="Menlo Park CA 94025" />
+            <Icon_text icon={faUser} text={fullName} />
+            <RawText text={shippingAddress.city} />
+            <RawText text={shippingAddress.state} />
             <RawText text="United States" />
-            <RawText text="+16434456437" />
+            <RawText text={shippingAddress.phoneNumber} />
             <Icon_text icon={faMap} text="View map" I_style="text-blue-600" />
-            <RawText text="Billing address" t_style="text-gray-900" />
-            <RawText text="Same as shipping address" />
+            <RawText text={shippingAddress.zipCode} t_style="text-gray-900" />
+            <RawText text={shippingAddress.shippingType} />
           </div>
         </Notes>
       </div>

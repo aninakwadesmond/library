@@ -1,0 +1,6 @@
+{
+  "db": "",
+  "openaiKey": "",
+  "jwtKey": "",
+  "auth": { "email_user": "", "email_password": "" }
+}

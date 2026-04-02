@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { setCurrentBook } from "../store/Feautures/Details";
 import { setCurrentHeading } from "../store/Feautures/HomeCards";
+import { setCartItems } from "../store/Feautures/CartSlice";
+import { useState } from "react";
+import { server } from "../Axios/api";
 
 function Card({ selling = true, cardContent = {} }) {
   const dispatch = useDispatch();
@@ -25,6 +28,7 @@ function Card({ selling = true, cardContent = {} }) {
     volumeInfo = [],
     // title = "",
     // key = "",
+    image='', 
     title = "",
     id,
     authors = [],
@@ -33,35 +37,45 @@ function Card({ selling = true, cardContent = {} }) {
     download_count = "",
   } = cardContent;
 
+  console.log('images', image)
   console.log(formats);
 
+  const [addtoCart, setAddtoCart] = useState(false); 
+
   function handleSetCurrentBook() {
+
     dispatch(setCurrentBook(cardContent));
     dispatch(setCurrentHeading(title));
     console.log("done setting current book");
     navigate(`/details/${id}`);
   }
+
+  function handleAddItemsToCart(event){
+    event.preventDefault(); 
+    // dispatch(setCartItems(cardContent))
+    dispatch(setCartItems({...cardContent, quantity:1, amountByQuantity:(((cardContent.download_count /1000)*2)||10 ).toFixed(2) *1}))
+  }
   return (
     <div
-      onClick={handleSetCurrentBook}
-      className="flex w-40 cursor-pointer flex-col items-start justify-center"
+      
+      className="flex w-40 cursor-pointer flex-col items-start justify-center "
     >
-      <div className="relative flex h-40 w-full flex-col items-center justify-center rounded-md bg-gray-400/30">
+      <div className="relative flex h-40 w-full flex-col items-center justify-center rounded-md bg-gray-400/30" onClick={handleSetCurrentBook}>
         <div className="max-h-[90%] w-[70%] rounded-md bg-slate-600">
           <img
             // src={`https://covers.openlibrary.org/b/id/${cover_i || cover_id || key.split("/").pop()}-M.jpg`}
-            src={`${formats["image/jpeg"] || volumeInfo.imageLinks?.thumbnail}?default=false`}
+            src={`${image || formats["image/jpeg"] || volumeInfo.imageLinks?.thumbnail}?default=false`}
             onError={(e) => (e.target.src = "/images/image-0.jpg")}
             alt="images"
             className="h-full w-full rounded-md"
           />
         </div>
-        <span className="absolute top-[5%] right-[5%] rounded-md bg-slate-400 px-2">
+        {/* <span className="absolute top-[5%] right-[5%] rounded-md bg-slate-400 px-2">
           <FontAwesomeIcon
             icon={faHeart}
             className="text-[12px] font-semibold text-red-400"
           />
-        </span>
+        </span> */}
       </div>
       <div className="flex w-full flex-col items-start justify-center">
         <h3 className="line-clamp-1 text-[14px] font-semibold tracking-tight text-gray-900/70 capitalize">
@@ -84,12 +98,12 @@ function Card({ selling = true, cardContent = {} }) {
           32.00 USD
         </p> */}
       </div>
-      { download_count > 70000 ? (
+      { download_count > 10000 ? (
         <div className="flex-col-start w-full gap-1">
           <p className="text-[14px] font-bold tracking-wide text-gray-950/70">
             {`₵${Math.floor((download_count /100))||10 }.00`}
           </p>
-          <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1">
+          <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-200 p-1 cursor-pointer" onClick={e=> handleAddItemsToCart(e)}>
             <FontAwesomeIcon
               icon={faBasketShopping}
               className="text-[10px] text-blue-500"
@@ -126,5 +140,21 @@ function PagesLike({ volumeInfo }) {
     </div>
   );
 }
+
+
+// async function LoadOrderArrary(){
+//   try {
+//     const response = await server.get('/order/me'); 
+//     return response; 
+//   } catch (error) {
+//     throw new Response(JSON.stringify(error || error?.message, {status:400}))
+//   }
+// }
+
+// export async function LoadOrdersArrary(){
+//   return {
+//     orders:LoadOrderArrary()
+//   }
+// }
 
 export default Card;

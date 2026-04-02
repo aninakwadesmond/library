@@ -13,13 +13,18 @@ import { useDispatch } from "react-redux";
 import { setChatHome, setChatRoom } from "../store/Feautures/ChatSlice";
 
 function Chat() {
+  const dispatch = useDispatch()
+
+  function handleCloseHome(){
+    dispatch(setChatHome(false))
+  }
   return (
 <>
- <div className="w-full absolute w-screen bg-blue-200/50 h-full top-0 bottom-0 left-0 right-0">
+ <div className="w-full absolute w-screen bg-blue-200/50 h-full top-0 bottom-0 left-0 right-0 z-30">
       
       </div>
 
-    <div className="absolute top-[1%] right-[5%] z-10 h-130 w-[90%] rounded-md bg-blue-50 shadow-lg md:w-100">
+    <div className="absolute top-[1%] right-[5%] z-40 h-130 w-[90%] rounded-md bg-blue-50 shadow-lg md:w-100">
      
       <div className="relative h-full w-full">
         <div className="flex-col-start h-[40%] justify-start gap-1 rounded-md bg-linear-to-r from-blue-500 to-blue-600 px-4 py-4">
@@ -35,7 +40,7 @@ function Chat() {
                 />
               </span>
             </div>
-            <span className="flex-placebetween group cursor-pointer">
+            <span className="flex-placebetween group cursor-pointer" onClick={handleCloseHome}>
               <FontAwesomeIcon
                 icon={faArrowAltCircleDown}
                 className="text-lg font-bold text-gray-600 transition duration-300 group-hover:text-white"

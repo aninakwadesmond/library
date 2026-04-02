@@ -1,14 +1,15 @@
 import { faEdit, faNavicon } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function OrderHeader() {
+function OrderHeader({data }) {
+  const {_id:id} = data; 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-2">
       <div className="flex w-full items-start justify-between">
         <div className="flex flex-col items-start justify-start">
           <div className="flex items-center justify-start gap-2">
             <p className="text-[13px] font-bold tracking-tight text-gray-600 capitalize">
-              Order ID: #430011564329
+              Order ID: #{`${id||'no order Id'}`}
             </p>
             <Status
               text="Payment pending"

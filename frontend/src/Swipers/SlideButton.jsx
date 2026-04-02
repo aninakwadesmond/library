@@ -6,7 +6,7 @@ import SwipeContext from "../Context/SwipeContext";
 
 function SlideButton() {
   const { isBeginning, isEnd } = useContext(SwipeContext);
-  console.log("from swiper", isBeginning, isEnd);
+  // console.log("from swiper", isBeginning, isEnd);
   const swiper = useSwiper();
   return (
     <div className="flex-between left[2%] absolute top-[50%] z-20 w-full -translate-y-[50%] [&_button]:cursor-pointer">

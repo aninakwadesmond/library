@@ -23,7 +23,7 @@ function Swipe({ children }) {
         spaceBetween={50}
         slidesPerView={5}
         // navigation
-        autoplay={{ delay: 1000, disableOnInteraction: false }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
         grabCursor={true}
         // pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
@@ -31,7 +31,7 @@ function Swipe({ children }) {
         onSlideChange={(swiper) => {
           setBeginning(swiper.isBeginning);
           setEnd(swiper.isEnd);
-          console.log(swiper, swiper.isBeginning, swiper.isEnd);
+          // console.log(swiper, swiper.isBeginning, swiper.isEnd);
         }}
       >
         <SlideButton />

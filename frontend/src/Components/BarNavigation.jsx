@@ -9,7 +9,7 @@ function BarNavigation() {
     <div className="mt-5 flex w-full items-center justify-start gap-2">
       <Link
         to="/"
-        className="text-[14px] tracking-tight text-gray-300 capitalize"
+        className="text-[14px] tracking-tight text-gray-300 capitalize cursor-pointer"
       >
         Home
       </Link>
