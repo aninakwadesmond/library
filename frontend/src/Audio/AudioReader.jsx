@@ -21,11 +21,10 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { use, useEffect, useRef, useState } from "react";
 
-function AudioReader({data:audioBook}) {
-
-  console.log('books', audioBook)
-  const data = use(audioBook)
-  console.log('resolved Promise', data)
+function AudioReader({ data: audioBook }) {
+  console.log("books", audioBook);
+  const data = use(audioBook);
+  console.log("resolved Promise", data);
   // const { speak, cancel, setPitch, setVoice, setRate, pause, resume } =
   //   useSpeechReader();
 
@@ -247,7 +246,7 @@ function AudioReader({data:audioBook}) {
           {title}
         </p>
         <span className="text-center text-sm text-[1rem] font-bold tracking-tight text-white/70">
-          {`Category: ${bookshelves[0].split(":")[1]}`}
+          {`Category: ${bookshelves[0]?.split(":").pop() || "Novel"}`}
         </span>
       </div>
       <CurrentReadTimer

@@ -6,28 +6,35 @@ import { server } from "../Axios/api";
 import { useSubmit } from "react-router-dom";
 
 function PayCart() {
+  const { cartItems } = useSelector((state) => state.cart);
 
-  const {cartItems} = useSelector(state => state.cart); 
-
-    const totalReducedCost = cartItems.reduce((acc, cart)=> acc + cart.amountByQuantity, 0 ); 
-  const taxes = totalReducedCost * (cartItems.length > 10 ? 0.11 : 0.053)
-  const deliveryFee = 12; 
+  const totalReducedCost = cartItems.reduce(
+    (acc, cart) => acc + cart.amountByQuantity,
+    0,
+  );
+  const taxes = totalReducedCost * (cartItems.length > 10 ? 0.11 : 0.053);
+  const deliveryFee = 12;
 
   return (
-    <div className="mb-10 flex w-full flex-col items-start justify-center gap-5 border border-gray-100 p-3 shadow-md shadow-gray-950/20 .thin-y-scrollbar .thin-scrollbar">
+    <div className=".thin-y-scrollbar .thin-scrollbar mb-10 flex w-full flex-col items-start justify-center gap-5 border border-gray-100 p-3 shadow-md shadow-gray-950/20">
       <Title_cart />
-      <div className="w-full gap-4 h-40 overflow-auto flex-col-start my-auto .thin-y-scrollbar pt-10 .thin-scrollbar">
-        {cartItems.map(cart =>  <Cart_Items_Order
-          title="Mens Top Black Puffed Jacket"
-          category="men's black"
-          price={990.0}
-          cart={cart}
-        />)}
-      
+      <div className="flex-col-start .thin-y-scrollbar .thin-scrollbar my-auto h-40 w-full gap-4 overflow-auto pt-10">
+        {cartItems.map((cart) => (
+          <Cart_Items_Order
+            title="Mens Top Black Puffed Jacket"
+            category="men's black"
+            price={990.0}
+            cart={cart}
+          />
+        ))}
       </div>
       <DiscountCode />
       <div className="flex w-full flex-col items-start justify-center gap-1 border-b border-gray-300/80 pb-2">
-        <Price_Tax title="Subtotal" price={totalReducedCost.toFixed(2)} textColor="text-gray-900 " />
+        <Price_Tax
+          title="Subtotal"
+          price={totalReducedCost.toFixed(2)}
+          textColor="text-gray-900 "
+        />
         <Price_Tax
           title="Shipping"
           price={deliveryFee.toFixed(2)}
@@ -42,64 +49,59 @@ function PayCart() {
       <div className="flex w-full flex-col items-start justify-center gap-6">
         <Price_Tax
           title="Total"
-          price={(totalReducedCost+ deliveryFee + taxes).toFixed(2)}
+          price={(totalReducedCost + deliveryFee + taxes).toFixed(2)}
           textColor="text-gray-900 text-[1.3rem]"
           total={true}
         />
-        <Button_Payment  />
+        <Button_Payment />
       </div>
     </div>
   );
 }
 
 function Button_Payment() {
-    // const {handleSubmit} = useContext(ShippingContext)
+  // const {handleSubmit} = useContext(ShippingContext)
 
-    // const {cartItems} = useSelector(state => state.cart)
+  // const {cartItems} = useSelector(state => state.cart)
 
-    // const {setItemsCredentials} = useContext(ShippingContext)
+  // const {setItemsCredentials} = useContext(ShippingContext)
 
   //   const itemsCredentials = cartItems.map(cart => {
   //     return {id:cart.id , qunatity:cart.quantity, totalCost:cart.amountByQuantity}
-  //   })    ; 
+  //   })    ;
   //  const [startPayment, setStartPayment] =  useState(false)
   //  const submit = useSubmit()
 
   //  async function handleSubmitCredentials(e){
-  //   console.log('events', e); 
-  // const credentials = new FormData(e.target); 
-  // credentials.append('orderedItems', JSON.stringify(itemsCredentials)); 
+  //   console.log('events', e);
+  // const credentials = new FormData(e.target);
+  // credentials.append('orderedItems', JSON.stringify(itemsCredentials));
 
   // submit(credentials, {method:'post', action:'/cart/shipping'})
   //  }
 
+  async function MakePayment() {
+    // handleSubmitCredentials(e)
+    // if(startPayment)
 
-    async function MakePayment(){
-      // handleSubmitCredentials(e)
-      // if(startPayment) 
+    try {
+      console.log("beginning to access the server");
+      const { data } = await server.post("/order/pay", { amount: 20 });
+      console.log("payment succesful", data);
 
-      try {
-        console.log('beginning to access the server'); 
-        const {data} =  await server.post('/order/pay', {amount:20})
-        console.log('payment succesful', data)
-
-        //redirection user to paystack checkout
-        window.location.href = data.authorization_url
-
-
-      } catch (error) {
-        throw new Response(JSON.stringify(error?.message), {status:300})
-      }
+      //redirection user to paystack checkout
+      window.location.href = data.authorization_url;
+    } catch (error) {
+      throw new Response(JSON.stringify(error?.message), { status: 300 });
     }
+  }
 
-    // if (!startPayment) return; 
-    // MakePayment(); 
-    // setStartPayment(prev => !prev); //warining calling state update in a useEffect can cause multiple rerendering
-
+  // if (!startPayment) return;
+  // MakePayment();
+  // setStartPayment(prev => !prev); //warining calling state update in a useEffect can cause multiple rerendering
 
   return (
-    <button className="flex w-full cursor-pointer flex-col items-center justify-center rounded-md bg-gray-900 p-3 font-bold text-gray-300 shadow-md" 
-     >
+    <button className="flex w-full cursor-pointer flex-col items-center justify-center rounded-md bg-gray-900 p-3 font-bold text-gray-300 shadow-md">
       Continue to Payment
     </button>
   );
@@ -114,7 +116,7 @@ function Price_Tax({ title, price, textColor, total }) {
         {title}
       </p>
       <p className={`font-bold tracking-normal ${textColor ? textColor : ""}`}>
-         ₵ {price}
+        ₵ {price}
       </p>
     </div>
   );
@@ -138,20 +140,20 @@ function DiscountCode() {
   );
 }
 
-function Cart_Items_Order({  category, price, cart }) {
-  const {formats, title, bookshelves, quantity} = cart 
+function Cart_Items_Order({ category, price, cart }) {
+  const { formats, title, bookshelves, quantity } = cart;
   return (
     <div className="flex w-full items-center justify-between">
       <div className="flex max-h-30 w-2/3 items-center justify-start gap-3">
-        <div className="relative max-h-auto w-1/4">
+        <div className="max-h-auto relative w-1/4">
           <img
-            src={`${formats['image/jpeg']}?default=false`}
-            onError={e=> e.src='/images/image-1.jpeg'}
+            src={`${formats["image/jpeg"]}?default=false`}
+            onError={(e) => (e.src = "/images/image-1.jpeg")}
             alt="book image"
             className="h-full w-full rounded-md"
           />
-          <span className="absolute -top-2 -right-2 flex h-4 w-4 flex-col items-center justify-center rounded-full font-bold text-gray-200 bg-linear-to-r from-blue-900 to-green-200 p-3">
-       {quantity}
+          <span className="absolute -top-2 -right-2 flex h-4 w-4 flex-col items-center justify-center rounded-full bg-linear-to-r from-blue-900 to-green-200 p-3 font-bold text-gray-200">
+            {quantity}
           </span>
         </div>
         <div className="flex flex-col items-start justify-center gap-1">
@@ -159,11 +161,13 @@ function Cart_Items_Order({  category, price, cart }) {
             {title}
           </h6>
           <p className="line-clamp-1 text-[10px] font-bold tracking-tight text-gray-400 capitalize">
-            {bookshelves[0].split(' ')[0]['Category']|| category}; 
+            {bookshelves[0]?.split(":")?.pop() || category};
           </p>
         </div>
       </div>
-      <h3 className="font-bold tracking-tight text-gray-700">${`${(((cart.download_count /1000)*2)||10 ).toFixed(2) *1}`}</h3>
+      <h3 className="font-bold tracking-tight text-gray-700">
+        ${`${((cart.download_count / 1000) * 2 || 10).toFixed(2) * 1}`}
+      </h3>
     </div>
   );
 }
