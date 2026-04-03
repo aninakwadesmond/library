@@ -19,7 +19,10 @@ orderRoute.post('/', [authLogin], async (req, res) => {
 
   const data = {
     ...req.body,
-    orderedItems: JSON.parse(req.body.orderedItems),
+    orderedItems:
+      typeof req.body.orderedItems === 'string'
+        ? JSON.parse(req.body.orderedItems)
+        : req.body.orderedItems,
     // formats: JSON.parse(req.body.formats),
   };
 

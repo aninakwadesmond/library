@@ -112,14 +112,14 @@ export async function actionSendOrderDetails({ request, params }) {
   console.log("prepared Input", shippingAddress, orderedItems, data);
 
   try {
-    const { data } = await server.post("/order", {
+    const response = await server.post("/order", {
       email,
       fullName,
       description,
       shippingAddress,
       orderedItems,
     });
-    toast.success(data.message);
+    toast.success(response.data.message);
     try {
       console.log("beginning to access the server");
       const { data } = await server.post("/order/pay", { amount: 20 });
@@ -128,7 +128,7 @@ export async function actionSendOrderDetails({ request, params }) {
       //redirection user to paystack checkout
       window.location.href = data.authorization_url;
     } catch (error) {
-      throw new Response(JSON.stringify(error?.message), { status: 300 });
+      throw new Response(JSON.stringify(error?.message), { status: 500 });
     }
   } catch (error) {
     toast.error(
