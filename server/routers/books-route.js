@@ -154,6 +154,22 @@ booksRoute.get('/related', async (req, res) => {
   }
 });
 
+booksRoute.get('/audiotext', async (req, res) => {
+  console.log('audiotext hit');
+  const { url } = req.query;
+  console.log('audiotext hit', url);
+
+  try {
+    const response = await axios.get(`${url}`);
+    console.log('response', response);
+    return res.status(200).json(response.data);
+  } catch (error) {
+    console.log(error);
+    console.log('message', error?.message);
+    return res.status(400).json(error);
+  }
+});
+
 module.exports = { saveBooksOnLoad, booksRoute };
 
 // booksRoute.poss
