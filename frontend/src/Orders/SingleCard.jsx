@@ -1,17 +1,17 @@
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function SingleCard({ name, price,  image , data}) {
-  console.log('data', data); 
+function SingleCard({ name, price, data }) {
+  console.log("data", data);
 
-  // const {email, fullName , orderedItems, shippingAddress} = data; 
-  const {category, formats, id, quantity, title, totalCost} = data
+  // const {email, fullName , orderedItems, shippingAddress} = data;
+  const { category, formats, id, quantity, title, totalCost, image } = data;
   return (
     <div className="flex w-full items-center justify-between pb-3">
       <div className="flex items-center justify-start gap-x-2">
         <div className="flex h-20 w-20 flex-col items-center justify-center">
           <img
-            src={formats['image/jpeg'] || image}
+            src={image || formats["image/jpeg"]}
             alt="book image"
             className="h-[90%] w-[90%] rounded-md"
           />
@@ -21,7 +21,7 @@ function SingleCard({ name, price,  image , data}) {
             {title}
           </p>
           <p className="text-[15px] font-bold tracking-normal text-gray-700">
-            ₵ {(totalCost/quantity).toFixed(2)}
+            ₵ {(totalCost / quantity).toFixed(2)}
           </p>
           <p className="text-[13px] font-semibold text-gray-300 capitalize">
             {category}
@@ -34,7 +34,9 @@ function SingleCard({ name, price,  image , data}) {
           className="order-3 w-20 rounded-md border-0 px-2 py-1 font-bold text-gray-500 shadow-md outline-0 md:order-0"
           defaultValue={quantity}
         />
-        <span className="font-bold tracking-normal text-gray-700">₵ {totalCost.toFixed(2)}</span>
+        <span className="font-bold tracking-normal text-gray-700">
+          ₵ {totalCost.toFixed(2)}
+        </span>
         <span className="-order-1 flex flex-col items-center justify-center md:order-1 md:pl-4">
           <FontAwesomeIcon
             icon={faTrashCan}

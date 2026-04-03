@@ -9,37 +9,31 @@ import { server } from "../Axios/api";
 import { Link, useLoaderData } from "react-router-dom";
 
 function Orders() {
-
   //one the orderPage load i verify payment by calling my paymentApi
-  const [orderpaid, setOrderPaid] = useState([]); 
+  const [orderpaid, setOrderPaid] = useState([]);
 
-  const {data} = useLoaderData()
-  console.log('loader data', data)
-  console.log('data oredred items', data); 
+  const { data } = useLoaderData();
+  console.log("loader data", data);
+  console.log("data oredred items", data);
 
-  useEffect(()=> {
-    async function verifyPaymentFromServer(){
-    const params = new URLSearchParams(window.location.search); 
-    const reference = params.get('reference'); 
-    console.log('params ', params, 'reference ', reference);
+  useEffect(() => {
+    async function verifyPaymentFromServer() {
+      const params = new URLSearchParams(window.location.search);
+      const reference = params.get("reference");
+      console.log("params ", params, "reference ", reference);
 
-    const {data} = await server.post('/order/verify', {reference})
-    console.log('this is the response upon verification', data )
-    setOrderPaid(true); 
-     
+      const { data } = await server.post("/order/verify", { reference });
+      console.log("this is the response upon verification", data);
+      setOrderPaid(true);
     }
-    verifyPaymentFromServer()
-  }, [])
-
-
-
-
+    verifyPaymentFromServer();
+  }, []);
 
   return (
     <div className="flex w-full flex-col items-start justify-center gap-5 px-3 py-5">
       <div className="flex w-full flex-col items-start justify-center gap-y-10">
-        <NavigationOrder data = {data} />
-        <OrderHeader data= {data} />
+        <NavigationOrder data={data} />
+        <OrderHeader data={data} />
       </div>
 
       <div className="w-full grid-cols-7 justify-items-center gap-4 md:grid">
@@ -56,17 +50,26 @@ function Orders() {
                   button2: "Create shipping label",
                 }}
               >
-                {data?.orderedItems?.map(data=><SingleCard
-                  name="custom notebook"
-                  price={20.0}
-                  category="Brown/85/Gold"
-                  quantity={1}
-                  image="/images/kids_read.jpeg"
-                  data= {data}
-                /> )}
+                {data?.orderedItems?.map((data) => (
+                  <SingleCard
+                    name="custom notebook"
+                    price={20.0}
+                    category="Brown/85/Gold"
+                    quantity={1}
+                    // image="/images/kids_read.jpeg"
+                    data={data}
+                  />
+                ))}
 
-                {!data && <Link to={'/'} className="px-4 py-2 rounded-md bg-orange-400 shadow-md text-md font-semibold tracking-normal text-white">Order an item</Link>}
-                
+                {!data && (
+                  <Link
+                    to={"/"}
+                    className="text-md rounded-md bg-orange-400 px-4 py-2 font-semibold tracking-normal text-white shadow-md"
+                  >
+                    Order an item
+                  </Link>
+                )}
+
                 {/* <SingleCard
                   name="custom T-shirt"
                   price={10.0}
@@ -108,21 +111,19 @@ function Orders() {
           </div>
         </div>
         <div className="col-span-2 w-full">
-          <RightNavigation data={data}/>
+          <RightNavigation data={data} />
         </div>
       </div>
     </div>
   );
 }
 
-
-export async function  LoadOrderData(){
-try {
-  const response  =  await server.get('/order/me')
-  return response
-
-} catch (error) {
-  throw new Response(JSON.stringify(error?.message), {status:404})
-}
+export async function LoadOrderData() {
+  try {
+    const response = await server.get("/order/me");
+    return response;
+  } catch (error) {
+    throw new Response(JSON.stringify(error?.message), { status: 404 });
+  }
 }
 export default Orders;
