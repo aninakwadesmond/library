@@ -14,8 +14,8 @@ app.use(express.json());
 // app.use(cors());
 
 const allowedOrigins = [
-  'http://localhost:5173',
   'https://library-mangement-1.onrender.com',
+  'http://localhost:5173',
 ];
 
 app.use(
