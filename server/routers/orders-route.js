@@ -108,7 +108,7 @@ orderRoute.post('/pay', [authLogin], async (req, res) => {
         email,
         amount: amount * 100,
         currency: 'GHS',
-        callback_url: `https://library-1-txiy.onrender.com/cart/order`,
+        callback_url: `https://library-mangement-1.onrender.com/cart/order`,
         metadata: { userId: id },
       },
       {
