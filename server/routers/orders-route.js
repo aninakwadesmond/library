@@ -112,14 +112,19 @@ orderRoute.post('/pay', [authLogin], async (req, res) => {
         metadata: { userId: id },
       },
       {
-        headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
+        headers: { Authorization: `Bearer ${process.env.PAYsTACK_SECRET_KEY}` },
       },
     );
+
+    console.log(process.env.PAYsTACK_SECRET_KEY, 'keys');
     console.log('your response', response.data.data);
     return res.status(200).json(response.data.data);
   } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(500).json({ error: 'Payment init failed' });
+    console.error('PAYSTACK ERROR:', error.response?.data || error.message);
+
+    return res.status(500).json({
+      error: error.response?.data || error.message,
+    });
   }
 });
 
