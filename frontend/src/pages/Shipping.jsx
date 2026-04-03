@@ -122,7 +122,11 @@ export async function actionSendOrderDetails({ request, params }) {
     toast.success(response.data.message);
     try {
       console.log("beginning to access the server");
-      const { data } = await server.post("/order/pay", { amount: 20 });
+      const { data } = await server.post("/order/pay", {
+        amount: JSON.parse(
+          orderedItems.reduce((acc, cur) => acc + cur.amountByQuantity, 0),
+        ),
+      });
       console.log("payment succesful", data);
 
       //redirection user to paystack checkout
