@@ -58,7 +58,7 @@ function Shipping() {
         <Form
           className="grid w-full lg:grid-cols-3 lg:gap-x-6"
           onSubmit={(e) => handleOnSubmit(e)}
-          method="post"
+          // method="post"
         >
           <div className="lg:col-span-2">
             <ShippingNavigation />
