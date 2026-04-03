@@ -122,7 +122,13 @@ export async function actionSendOrderDetails({ request, params }) {
     toast.success(response.data.message);
     try {
       const { data } = await server.post("/order/pay", {
-        amount: 300,
+        amount:
+          typeof orderedItems === "string"
+            ? JSON.parse(orderedItems).reduce(
+                (acc, cur) => acc + cur.totalCost,
+                0,
+              )
+            : orderedItems.reduce((acc, cur) => acc + cur.totalCost, 0),
       });
       console.log("payment succesful", data);
 
